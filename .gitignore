@@ -1,0 +1,36 @@
+# Environment
+.env
+.env.local
+
+# Dependencies
+/vendor/
+
+# Uploads
+/uploads/*
+!/uploads/.gitkeep
+!/uploads/products/.gitkeep
+!/uploads/stores/.gitkeep
+!/uploads/returns/.gitkeep
+!/uploads/profiles/.gitkeep
+
+# Local config
+config/database.local.php
+
+# Logs
+*.log
+/logs/
+
+# Cache
+/cache/
+/tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Composer
+composer.phar
