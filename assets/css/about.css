@@ -1,0 +1,81 @@
+﻿.about-page-hero {
+    min-height: 360px;
+    background: linear-gradient(135deg, #bfdbfe 0%, #60a5fa 48%, #2563eb 100%);
+}
+
+.about-page {
+    padding: 96px 0 86px;
+}
+
+.about-intro {
+    display: grid;
+    grid-template-columns: 1fr 540px;
+    gap: 96px;
+    align-items: center;
+}
+
+.about-intro-content h1,
+.about-feature-content h2 {
+    margin: 0 0 14px;
+    color: #0f172a;
+    font-size: clamp(54px, 8vw, 82px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.07em;
+}
+
+.about-intro-content p,
+.about-feature-content p {
+    margin: 0;
+    max-width: 560px;
+    color: #0f172a;
+    font-size: 28px;
+    line-height: 1.18;
+}
+
+.about-intro-image {
+    min-height: 450px;
+    background: #dbeafe;
+}
+
+.about-feature {
+    display: grid;
+    grid-template-columns: 430px 1fr;
+    gap: 96px;
+    align-items: center;
+    margin-top: 96px;
+    padding: 44px;
+    background: #bfdbfe;
+}
+
+.about-feature-image {
+    min-height: 450px;
+    background: #eff6ff;
+}
+
+.about-feature-content {
+    max-width: 620px;
+}
+
+.about-label {
+    margin: 0 0 6px;
+    color: #1e3a8a;
+    font-size: 18px;
+    letter-spacing: 0.32em;
+}
+
+.about-cta {
+    margin-top: 86px;
+    padding: 76px 48px;
+    background: #dbeafe;
+    text-align: center;
+}
+
+.about-cta h2 {
+    max-width: 780px;
+    margin: 0 auto 32px;
+    color: #0f172a;
+    font-size: clamp(28px, 4vw, 34px);
+    line-height: 1.22;
+}

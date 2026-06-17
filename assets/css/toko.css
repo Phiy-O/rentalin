@@ -1,0 +1,36 @@
+﻿.dashboard-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    padding: 32px 0;
+}
+
+.store-sidebar {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.store-sidebar h3 {
+    margin-top: 0;
+}
+
+.store-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.store-sidebar a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #374151;
+}
+
+.store-sidebar a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}

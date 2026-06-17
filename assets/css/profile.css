@@ -1,0 +1,260 @@
+.profile-page {
+    padding: 48px 0 72px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.profile-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 24px;
+    letter-spacing: -0.03em;
+}
+
+.profile-small-icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+}
+
+.profile-small-icon::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border: 2px solid #0f172a;
+    border-radius: 50%;
+}
+
+.profile-small-icon::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    bottom: 3px;
+    width: 16px;
+    height: 10px;
+    border: 2px solid #0f172a;
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+}
+
+.profile-panel {
+    overflow: hidden;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+}
+
+.profile-tabs {
+    display: flex;
+    border-bottom: 1px solid #1e3a8a;
+    background: #dbeafe;
+}
+
+.profile-tabs a {
+    min-width: 160px;
+    padding: 14px 34px;
+    color: #0f172a;
+    font-weight: 800;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+}
+
+.profile-tabs a.active {
+    border-bottom-color: #0f172a;
+    background: #eff6ff;
+}
+
+.profile-content {
+    min-height: 430px;
+    padding: 40px 46px 54px;
+}
+
+.profile-biodata {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 34px;
+    align-items: start;
+}
+
+.profile-photo-card {
+    padding: 18px;
+    background: #dbeafe;
+    border: 1px solid #bfdbfe;
+}
+
+.profile-photo-placeholder {
+    display: grid;
+    place-items: center;
+    height: 220px;
+    background: #ffffff;
+    border: 1px solid #bfdbfe;
+}
+
+.profile-avatar-icon {
+    position: relative;
+    width: 150px;
+    height: 170px;
+}
+
+.profile-avatar-icon::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 49px;
+    width: 54px;
+    height: 54px;
+    border: 6px solid #1e3a8a;
+    border-radius: 50%;
+}
+
+.profile-avatar-icon::after {
+    content: "";
+    position: absolute;
+    left: 18px;
+    bottom: 10px;
+    width: 112px;
+    height: 72px;
+    border: 6px solid #1e3a8a;
+    border-bottom: 0;
+    border-radius: 72px 72px 0 0;
+}
+
+.profile-photo-card button,
+.profile-outline-button {
+    width: 100%;
+    min-height: 42px;
+    margin-top: 14px;
+    border: 1px solid #1e40af;
+    background: #ffffff;
+    color: #1e40af;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.profile-photo-card p {
+    margin: 12px 0 0;
+    color: #334155;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.profile-details h2,
+.profile-security-card h2 {
+    margin: 0 0 22px;
+    color: #475569;
+    font-size: 14px;
+}
+
+.profile-details dl,
+.profile-security-card dl {
+    display: grid;
+    gap: 18px;
+    margin: 0;
+}
+
+.profile-details dl div {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 26px;
+}
+
+.profile-details dt,
+.profile-security-card dt {
+    color: #0f172a;
+    font-weight: 500;
+}
+
+.profile-details dd,
+.profile-security-card dd {
+    margin: 0;
+    color: #0f172a;
+}
+
+.profile-outline-button {
+    width: 240px;
+    margin-top: 26px;
+}
+
+.profile-security-card {
+    max-width: 1080px;
+}
+
+.profile-security-card dl div {
+    display: grid;
+    grid-template-columns: 150px 190px 110px auto;
+    gap: 22px;
+    align-items: center;
+}
+
+.profile-security-card span {
+    color: #334155;
+    font-size: 13px;
+}
+
+.profile-security-card a {
+    color: #1e40af;
+    font-weight: 800;
+    text-decoration: underline;
+}
+
+.profile-logout-box {
+    margin-top: 16px;
+    border-top: 1px solid #94a3b8;
+    padding-top: 12px;
+}
+
+.profile-logout-box p {
+    margin: 0 0 6px;
+    color: #0f172a;
+}
+
+@media (max-width: 900px) {
+    .profile-biodata {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-photo-card {
+        max-width: 360px;
+    }
+
+    .profile-security-card dl div {
+        grid-template-columns: 140px 1fr auto;
+    }
+
+    .profile-security-card dl div span {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-page {
+        padding: 28px 0 48px;
+    }
+
+    .profile-tabs a {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 10px;
+    }
+
+    .profile-content {
+        padding: 26px 18px 34px;
+    }
+
+    .profile-details dl div,
+    .profile-security-card dl div {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .profile-outline-button {
+        width: 100%;
+    }
+}
