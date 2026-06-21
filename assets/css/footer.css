@@ -1,14 +1,43 @@
 ﻿.footer {
+    position: relative;
     margin-top: 0;
-    padding: 34px 0 14px;
-    background: #eff6ff;
-    color: #0f172a;
+    padding: 52px 0 18px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 20%, rgba(59, 130, 246, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.14), transparent 26%),
+        linear-gradient(135deg, #0f2150 0%, #1e3a8a 52%, #2563eb 100%);
+    color: #ffffff;
+}
+
+.footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    transform: translateX(-100%);
+    animation: footer-sheen 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.footer::after {
+    content: "";
+    position: absolute;
+    right: -120px;
+    bottom: -160px;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.18), transparent 62%);
+    pointer-events: none;
 }
 
 .footer-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: 1.5fr repeat(3, 1fr);
-    gap: 54px;
+    gap: 48px;
 }
 
 .footer h2,
@@ -18,7 +47,7 @@
 }
 
 .footer h2 {
-    color: #0f4fd9;
+    color: #ffffff;
     font-size: 26px;
     letter-spacing: -0.04em;
     margin: 0;
@@ -26,43 +55,157 @@
 
 .footer-logo {
     display: block;
-    height: 32px;
+    height: 48px;
     width: auto;
 }
 
 .footer h3 {
-    font-size: 14px;
+    margin-bottom: 16px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
-.footer a {
-    display: block;
-    margin-bottom: 10px;
-    color: #334155;
+.footer .footer-menu a {
+    position: relative;
+    display: table;
+    margin-bottom: 11px;
+    color: rgba(255, 255, 255, 0.72);
     font-size: 14px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer .footer-menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: #93c5fd;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+}
+
+.footer .footer-menu a:hover {
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.footer .footer-menu a:hover::after {
+    transform: scaleX(1);
 }
 
 .footer-brand p {
-    max-width: 270px;
-    color: #334155;
+    max-width: 300px;
+    margin-top: 14px;
+    color: rgba(255, 255, 255, 0.72);
     font-size: 14px;
+    line-height: 1.7;
 }
 
 .footer-socials {
     display: flex;
-    gap: 14px;
-    margin-top: 18px;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .footer-socials span {
-    width: 26px;
-    height: 26px;
-    background: #2563eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #ffffff;
+    overflow: visible;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    animation: footer-pulse 2.6s ease-in-out infinite;
+    cursor: pointer;
+}
+
+.footer-socials span svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    color: currentColor;
+}
+
+.footer-socials span svg * {
+    fill: currentColor;
+    stroke: none;
+}
+
+.footer-socials span:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.footer-socials span:nth-child(3) {
+    animation-delay: 0.5s;
 }
 
 .footer-bottom {
-    margin-top: 28px;
-    border-top: 1px solid #93c5fd;
-    padding-top: 10px;
-    color: #334155;
+    position: relative;
+    z-index: 1;
+    margin-top: 38px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    padding-top: 16px;
+    color: rgba(255, 255, 255, 0.62);
     font-size: 13px;
+}
+
+.footer-bottom p {
+    margin-bottom: 0;
+}
+
+@keyframes footer-sheen {
+    0%, 55% {
+        transform: translateX(-100%);
+    }
+
+    80%, 100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes footer-pulse {
+    0%, 100% {
+        opacity: 0.55;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 42px 0 16px;
+    }
+
+    .footer-grid {
+        gap: 28px;
+    }
+
+    .footer-brand p {
+        max-width: none;
+    }
+
+    .footer-bottom {
+        margin-top: 30px;
+    }
 }

@@ -18,7 +18,7 @@ if ($isLoggedIn && $useCatalogNavbar) {
     mysqli_stmt_close($stmt);
 }
 ?>
-<nav class="navbar <?= $useCatalogNavbar ? 'catalog-navbar' : ''; ?>">
+<nav class="navbar <?= $useCatalogNavbar ? 'catalog-navbar' : 'landing-navbar'; ?>">
     <div class="navbar-inner container">
         <?php if ($useCatalogNavbar): ?>
             <div class="navbar-logo">

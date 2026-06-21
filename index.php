@@ -42,10 +42,17 @@ while ($row = mysqli_fetch_assoc($featuredResult)) {
             <div class="hero-actions">
                 <a class="btn btn-primary btn-hero" href="<?= route('catalog'); ?>">
                     Mulai Sewa
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
                 </a>
                 <a class="btn btn-hero-outline" href="<?= route('home'); ?>#about">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4" />
+                        <path d="M12 8h.01" />
+                    </svg>
                     Tentang Kami
                 </a>
             </div>
@@ -53,7 +60,11 @@ while ($row = mysqli_fetch_assoc($featuredResult)) {
         <div class="hero-visual">
             <div class="hero-visual-glow"></div>
             <div class="hero-visual-wrap">
-                <img src="assets/images/hero-image.png" alt="Barang rental">
+                <img src="assets/images/camera.png" alt="Kamera">
+                <div class="hero-visual-label">
+                    <span>Kamera Profesional</span>
+                    <strong>Mulai Rp50.000/hari</strong>
+                </div>
             </div>
         </div>
     </div>
@@ -102,12 +113,18 @@ while ($row = mysqli_fetch_assoc($featuredResult)) {
                 </span>
                 <strong>Event</strong>
             </a>
+            <a class="category-item" href="<?= route('catalog', ['category' => 'gaming']); ?>">
+                <span class="category-icon">
+                    <img src="assets/images/controller.png" alt="gaming">
+                </span>
+                <strong>Gaming</strong>
+            </a>
         </div>
     </section>
 
     <section class="container landing-section" id="products">
         <div class="section-title-row">
-            <h2>Feature Products</h2>
+            <h2>Featured Products</h2>
             <a class="btn btn-outline btn-small" href="<?= route('catalog'); ?>">Explore</a>
         </div>
         <div class="featured-grid">
@@ -141,13 +158,12 @@ while ($row = mysqli_fetch_assoc($featuredResult)) {
     <section class="about-section" id="about">
         <div class="container about-grid">
             <div class="about-content">
-                <p class="eyebrow">Kenapa Rentalin?</p>
-                <h2>About Us</h2>
+                <p class="eyebrow">Tentang Rentalin</p>
+                <h1>Cerita Kami</h1>
                 <p>
-                    Rentalin dibuat untuk memudahkan penyewa menemukan barang dan membantu
-                    pemilik toko mengelola rental secara lebih praktis.
+                    Rentalin adalah platform sewa-menyewa barang terpadu. Kami percaya kegunaan barang lebih penting daripada kepemilikan. Melalui platform ini, penyewa dapat menghemat pengeluaran, sedangkan pemilik barang bisa menghasilkan pendapatan dari aset yang jarang digunakan.
                 </p>
-                <a class="btn btn-white" href="<?= route('register'); ?>">Join us</a>
+                <a class="btn btn-white" href="<?= route('register'); ?>">Baca Selengkapnya</a>
             </div>
             <div class="about-gallery">
                 <div class="about-photo tall">

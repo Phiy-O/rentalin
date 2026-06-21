@@ -30,12 +30,12 @@
     .about-intro,
     .about-feature {
         grid-template-columns: 1fr 420px;
-        gap: 48px;
+        gap: 44px;
     }
 
     .about-intro-content p,
     .about-feature-content p {
-        font-size: 23px;
+        font-size: 18px;
     }
 
     .contact-grid {
@@ -49,11 +49,11 @@
 
     .contact-item strong,
     .contact-form label {
-        font-size: 21px;
+        font-size: 14px;
     }
 
     .contact-item p {
-        font-size: 22px;
+        font-size: 16px;
     }
 
     .discount-banner {
@@ -184,12 +184,14 @@
         grid-template-columns: 1fr;
     }
 
-    .about-photo.tall {
+    .about-photo.tall,
+    .about-photo.tall .about-photo.one {
         min-height: 220px;
     }
 
-    .about-stats {
-        font-size: 46px;
+    .about-photo.two,
+    .about-photo.three {
+        min-height: 180px;
     }
 
     .footer-grid {
@@ -197,7 +199,7 @@
     }
 
     .services-hero {
-        min-height: 260px;
+        min-height: 340px;
     }
 
     .services-page {
@@ -209,16 +211,17 @@
     }
 
     .services-heading p {
-        font-size: 18px;
+        font-size: 11px;
     }
 
     .service-card {
         min-height: auto;
-        padding: 30px;
+        padding: 28px;
+        border-radius: 22px;
     }
 
     .about-page-hero {
-        min-height: 260px;
+        min-height: 340px;
     }
 
     .about-page {
@@ -233,59 +236,75 @@
 
     .about-intro-content p,
     .about-feature-content p {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .about-intro-image,
     .about-feature-image {
         min-height: 280px;
+        border-radius: 22px;
     }
 
     .about-feature {
         margin-top: 58px;
         padding: 28px;
+        border-radius: 26px;
     }
 
     .about-cta {
         margin-top: 58px;
         padding: 48px 24px;
+        border-radius: 26px;
     }
 
     .contact-hero {
-        min-height: 260px;
+        min-height: 340px;
     }
 
     .contact-page {
         padding: 58px 0 64px;
     }
 
-    .contact-grid,
-    .contact-form-row {
+    .contact-grid {
         grid-template-columns: 1fr;
         gap: 28px;
     }
 
+    .contact-form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
     .contact-info h1 {
-        margin-bottom: 28px;
+        margin-bottom: 12px;
+    }
+
+    .contact-info-list {
+        grid-template-columns: 1fr;
     }
 
     .contact-item p {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .contact-item strong,
     .contact-form label {
-        font-size: 19px;
+        font-size: 14px;
+    }
+
+    .contact-form {
+        padding: 26px;
+        border-radius: 12px;
     }
 
     .contact-form input,
     .contact-submit {
-        height: 62px;
-        min-height: 62px;
+        height: 52px;
+        min-height: 52px;
     }
 
     .contact-form textarea {
-        min-height: 240px;
+        min-height: 150px;
     }
 
 

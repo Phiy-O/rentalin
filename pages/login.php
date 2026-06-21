@@ -24,6 +24,7 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="auth-brand-mark">
                 <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo-white.png" alt="rentalin-logo">
             </div>
+            <p>Sewa barang lebih mudah, hemat, dan terpercaya dalam satu platform.</p>
         </section>
 
         <section class="auth-login-card">
@@ -64,11 +65,6 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
 
             <a class="auth-secondary-button" href="<?= route('register'); ?>">Daftar sebagai pengguna baru</a>
-
-            <p class="form-note">
-                Belum punya akun?
-                <a href="<?= route('register'); ?>">Daftar sekarang</a>
-            </p>
         </section>
     </div>
 </main>
