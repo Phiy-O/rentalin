@@ -21,6 +21,13 @@
     color: #0f4fd9;
     font-size: 26px;
     letter-spacing: -0.04em;
+    margin: 0;
+}
+
+.footer-logo {
+    display: block;
+    height: 32px;
+    width: auto;
 }
 
 .footer h3 {

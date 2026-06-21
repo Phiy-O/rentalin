@@ -19,14 +19,32 @@ CREATE TABLE stores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
+    slug VARCHAR(120) NOT NULL UNIQUE,
     description TEXT NULL,
+    logo VARCHAR(255) NULL,
     address TEXT NOT NULL,
+    city VARCHAR(100) NULL,
+    province VARCHAR(100) NULL,
+    google_maps_link TEXT NULL,
     phone VARCHAR(20) NULL,
-    image VARCHAR(255) NULL,
-    status ENUM('pending', 'active', 'inactive') NOT NULL DEFAULT 'pending',
+    email VARCHAR(100) NULL,
+    open_time TIME NULL,
+    close_time TIME NULL,
+    rental_terms TEXT NULL,
+    deposit_policy TEXT NULL,
+    fine_policy TEXT NULL,
+    status ENUM('pending', 'active', 'inactive') NOT NULL DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_stores_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE store_categories (
+    store_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (store_id, category_id),
+    CONSTRAINT fk_sc_store FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE,
+    CONSTRAINT fk_sc_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE categories (

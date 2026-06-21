@@ -41,6 +41,7 @@ require_once __DIR__ . '/../includes/navbar.php';
         </div>
 
         <form class="contact-form" action="<?= route('contact.submit'); ?>" method="POST">
+            <?= csrf_field(); ?>
             <div class="contact-form-row">
                 <div class="form-group">
                     <label for="name">Yourname</label>

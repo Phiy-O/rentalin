@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect_route('login');
 }
 
+require_csrf();
+
 $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 

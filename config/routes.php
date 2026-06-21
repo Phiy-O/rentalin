@@ -21,12 +21,22 @@ $routes = [
     'terms.privacy' => '/pages/contact.php',
     'terms.rental' => '/pages/contact.php',
     'help' => '/pages/contact.php',
+    'toko.create' => '/toko/buat.php',
+    'toko.create.store' => '/actions/toko/create.php',
     'toko.dashboard' => '/toko/dashboard.php',
     'toko.orders' => '/toko/pesanan.php',
-    'toko.products' => '/toko/barang.php',
+    'toko.products' => '/toko/barang-saya.php',
     'toko.products.create' => '/toko/tambah-barang.php',
+    'toko.products.edit' => '/toko/edit-barang.php',
+    'toko.products.detail' => '/toko/detail-barang.php',
+    'toko.products.toggle' => '/actions/barang/toggle.php',
+    'toko.products.store' => '/actions/barang/store.php',
     'toko.returns' => '/toko/pengembalian.php',
     'toko.settings' => '/toko/pengaturan.php',
+    'toko.settings.update' => '/actions/toko/update.php',
+    'toko.order.detail' => '/toko/detail-pesanan.php',
+    'rental.accept' => '/actions/rental/accept.php',
+    'rental.reject' => '/actions/rental/reject.php',
 ];
 
 if (!function_exists('route')) {

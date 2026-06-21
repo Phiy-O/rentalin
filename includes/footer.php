@@ -1,7 +1,7 @@
 <footer class="footer" id="footer">
     <div class="container footer-grid">
         <div class="footer-brand">
-            <h2><?= defined('APP_NAME') ? APP_NAME : 'Rentalin'; ?></h2>
+            <h2><img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo" class="footer-logo"></h2>
             <p>Platform rental barang untuk penyewa dan pemilik toko rental.</p>
             <div class="footer-socials">
                 <span></span>

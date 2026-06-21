@@ -1,0 +1,33 @@
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.icon-sm svg {
+    width: 16px;
+    height: 16px;
+}
+
+.icon-lg svg {
+    width: 32px;
+    height: 32px;
+}
+
+.icon-xl svg {
+    width: 40px;
+    height: 40px;
+}
+
+.icon-primary {
+    color: #2563eb;
+}
+
+.icon-white {
+    color: #ffffff;
+}
+
+.icon-muted {
+    color: #6b7280;
+}

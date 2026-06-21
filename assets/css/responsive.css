@@ -3,7 +3,11 @@
         width: min(1000px, calc(100% - 40px));
     }
 
-    .hero-grid,
+    .hero-grid {
+        grid-template-columns: minmax(0, 1fr) 400px;
+        gap: 48px;
+    }
+
     .about-grid {
         grid-template-columns: 1fr 420px;
         gap: 60px;
@@ -21,20 +25,6 @@
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 28px;
-    }
-
-    .catalog-promo {
-        grid-template-columns: 1fr 360px;
-        gap: 42px;
-    }
-
-    .catalog-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
-    }
-
-    .catalog-page.container {
-        width: min(100%, calc(100% - 40px));
     }
 
     .about-intro,
@@ -105,8 +95,7 @@
         gap: 16px;
     }
 
-    .catalog-navbar .container,
-    .catalog-page.container {
+    .catalog-navbar .container {
         width: min(100%, calc(100% - 24px));
     }
 
@@ -125,31 +114,38 @@
         justify-content: space-between;
     }
 
-    .hero,
     .hero-grid,
     .about-grid,
     .discount-banner,
     .dashboard-layout,
-    .catalog-filter form,
-    .product-grid,
     .featured-grid,
     .services-grid,
     .footer-grid {
         grid-template-columns: 1fr;
     }
 
-    .landing-hero,
-    .hero-grid {
+    .landing-hero {
         min-height: auto;
     }
 
     .hero-grid {
-        padding: 40px 0;
-        gap: 34px;
+        padding: 48px 0 40px;
+        gap: 40px;
+        min-height: auto;
     }
 
     .hero-visual {
-        min-height: 300px;
+        min-height: auto;
+        order: -1;
+    }
+
+    .hero-visual-wrap {
+        max-width: 340px;
+    }
+
+    .hero-visual-glow {
+        width: 240px;
+        height: 240px;
     }
 
     .category-grid {
@@ -292,40 +288,5 @@
         min-height: 240px;
     }
 
-    .catalog-page {
-        padding: 32px 0 80px;
-    }
 
-    .catalog-promo {
-        grid-template-columns: 1fr;
-        gap: 28px;
-        padding: 32px 24px;
-    }
-
-    .catalog-promo-visual {
-        min-height: 220px;
-    }
-
-    .catalog-products {
-        padding-top: 54px;
-    }
-
-    .catalog-tabs a {
-        flex: 1 1 calc(50% - 8px);
-        min-width: 0;
-    }
-
-    .catalog-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-    }
-
-    .catalog-card-image {
-        height: 145px;
-    }
-
-    .catalog-card-footer {
-        align-items: stretch;
-        flex-direction: column;
-    }
 }

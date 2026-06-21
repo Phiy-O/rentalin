@@ -11,7 +11,9 @@ require_once __DIR__ . '/../includes/header.php';
 
 <header class="auth-topbar">
     <div class="container auth-topbar-inner">
-        <a class="auth-logo" href="<?= route('home'); ?>"><?= APP_NAME; ?></a>
+        <a class="auth-logo" href="<?= route('home'); ?>">
+            <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
+        </a>
         <a class="auth-help" href="<?= route('contact'); ?>">Butuh Bantuan?</a>
     </div>
 </header>
@@ -20,10 +22,8 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="container auth-login-grid">
         <section class="auth-brand-panel">
             <div class="auth-brand-mark">
-                <span class="auth-key-icon"></span>
-                <strong><?= APP_NAME; ?></strong>
+                <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo-white.png" alt="rentalin-logo">
             </div>
-            <p>Buat akun untuk mulai menyewa barang atau membuka toko rental sendiri.</p>
         </section>
 
         <section class="auth-login-card auth-register-card">
@@ -35,6 +35,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php show_flash(); ?>
 
             <form class="auth-login-form" action="<?= route('auth.register'); ?>" method="POST">
+                <?= csrf_field(); ?>
                 <div class="form-group auth-field">
                     <label for="name">Nama Lengkap</label>
                     <input type="text" id="name" name="name" placeholder="Nama lengkap" required>

@@ -50,7 +50,9 @@ $price = (float) $product['price_per_day'];
 
 <header class="checkout-topbar">
     <div class="container checkout-topbar-inner">
-        <a class="checkout-logo" href="<?= route('catalog'); ?>"><?= APP_NAME; ?></a>
+        <a class="checkout-logo" href="<?= route('catalog'); ?>">
+            <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
+        </a>
         <a class="checkout-help" href="<?= route('contact'); ?>">Butuh Bantuan?</a>
     </div>
 </header>
@@ -60,6 +62,7 @@ $price = (float) $product['price_per_day'];
     <?php show_flash(); ?>
 
     <form class="checkout-layout" action="<?= route('rental.store'); ?>" method="POST">
+        <?= csrf_field(); ?>
         <input type="hidden" name="product_id" value="<?= (int) $product['id']; ?>">
 
         <div class="checkout-main">

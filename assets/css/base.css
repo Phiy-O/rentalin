@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -16,7 +20,7 @@ a {
 }
 
 .container {
-    width: min(1280px, calc(100% - 48px));
+    width: min(100%, calc(100% - 27%));
     margin: 0 auto;
 }
 

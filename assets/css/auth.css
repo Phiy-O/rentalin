@@ -10,13 +10,6 @@
     min-height: 78px;
 }
 
-.auth-logo {
-    color: #0f4fd9;
-    font-size: 34px;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-}
-
 .auth-help {
     color: #1e3a8a;
     font-weight: 700;
@@ -42,18 +35,20 @@
     color: #ffffff;
 }
 
+.auth-logo img {
+    display: block;
+    height: 34px;
+    width: auto;
+}
+
 .auth-brand-mark {
     display: flex;
     align-items: center;
-    gap: 34px;
 }
 
-.auth-brand-mark strong {
-    font-size: clamp(78px, 10vw, 128px);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.08em;
-    text-transform: uppercase;
+.auth-brand-mark img {
+    height: 200px;
+    width: auto;
 }
 
 .auth-brand-panel p {
@@ -61,37 +56,6 @@
     margin: 28px 0 0 132px;
     color: #dbeafe;
     font-size: 20px;
-}
-
-.auth-key-icon {
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border: 5px solid #ffffff;
-    border-radius: 50%;
-}
-
-.auth-key-icon::before {
-    content: "";
-    position: absolute;
-    left: 62px;
-    top: 16px;
-    width: 88px;
-    height: 5px;
-    background: #ffffff;
-    transform: rotate(-45deg);
-    transform-origin: left center;
-}
-
-.auth-key-icon::after {
-    content: "";
-    position: absolute;
-    left: 96px;
-    top: -8px;
-    width: 28px;
-    height: 28px;
-    border: 5px solid #ffffff;
-    transform: rotate(45deg);
 }
 
 .auth-login-card {
@@ -300,8 +264,8 @@
         border-width: 4px;
     }
 
-    .auth-brand-mark strong {
-        font-size: 52px;
+    .auth-brand-mark img {
+        height: 42px;
     }
 
     .auth-login-card {

@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect_route('catalog');
 }
 
+require_csrf();
+
 $userId = (int) $_SESSION['user_id'];
 $productId = (int) ($_POST['product_id'] ?? 0);
 $startDate = $_POST['start_date'] ?? '';

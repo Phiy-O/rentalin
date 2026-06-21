@@ -1,21 +1,36 @@
 <?php
 $isLoggedIn = isset($_SESSION['user_id']);
 $username = $_SESSION['username'] ?? 'User';
-$currentPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
-$isCatalogPage = $currentPage === 'catalog.php';
-$isProfilePage = $currentPage === 'profile.php';
-$isProductDetailPage = $currentPage === 'product-detail.php';
-$useCatalogNavbar = $isCatalogPage || $isProfilePage || $isProductDetailPage;
+$currentScript = $_SERVER['SCRIPT_NAME'] ?? '';
+$currentPage = basename($currentScript);
+$publicPages = ['index.php', 'about.php', 'services.php', 'contact.php'];
+$isPublicPage = in_array($currentPage, $publicPages);
+$useCatalogNavbar = !$isPublicPage;
+
+$userStore = null;
+if ($isLoggedIn && $useCatalogNavbar) {
+    require_once __DIR__ . '/../config/database.php';
+    $stmt = mysqli_prepare($conn, "SELECT id, name FROM stores WHERE user_id = ?");
+    mysqli_stmt_bind_param($stmt, 'i', $_SESSION['user_id']);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $userStore = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
+}
 ?>
 <nav class="navbar <?= $useCatalogNavbar ? 'catalog-navbar' : ''; ?>">
     <div class="navbar-inner container">
         <?php if ($useCatalogNavbar): ?>
             <div class="navbar-logo">
-                <a href="<?= route('catalog'); ?>"><?= APP_NAME; ?></a>
+                <a href="<?= route('catalog'); ?>">
+                    <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
+                </a>
             </div>
         <?php else: ?>
             <div class="navbar-logo">
-                <a href="<?= route('home'); ?>"><?= APP_NAME; ?></a>
+                <a href="<?= route('home'); ?>">
+                    <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
+                </a>
             </div>
         <?php endif; ?>
 
@@ -26,11 +41,24 @@ $useCatalogNavbar = $isCatalogPage || $isProfilePage || $isProductDetailPage;
             </form>
 
             <div class="catalog-nav-actions">
-                <a class="catalog-nav-icon cart-icon" href="<?= route('cart'); ?>" aria-label="Keranjang rental"></a>
-                <a class="catalog-nav-icon bell-icon" href="<?= route('notifications'); ?>" aria-label="Notifikasi"></a>
+                <a class="catalog-nav-icon cart-icon" href="<?= route('cart'); ?>" aria-label="Keranjang rental"><?php render_icon('shopping-cart'); ?></a>
+                <a class="catalog-nav-icon bell-icon" href="<?= route('notifications'); ?>" aria-label="Notifikasi"><?php render_icon('bell'); ?></a>
                 <span class="catalog-nav-divider"></span>
-                <a class="catalog-nav-icon store-icon" href="<?= route('toko.dashboard'); ?>" aria-label="Toko"></a>
-                <a class="catalog-nav-user" href="<?= route('profile'); ?>"><span class="user-icon"></span><?= htmlspecialchars($username); ?></a>
+                <div class="store-icon-wrapper">
+                    <a class="catalog-nav-icon store-icon" href="<?= $userStore ? route('toko.dashboard') : route('toko.create'); ?>" aria-label="Toko"><?php render_icon('store'); ?></a>
+                    <div class="store-popup">
+                        <?php if ($userStore): ?>
+                            <p class="store-popup-name"><?= htmlspecialchars($userStore['name']); ?></p>
+                            <hr>
+                            <a class="btn btn-primary btn-small btn-full" href="<?= route('toko.dashboard'); ?>">Lihat Toko</a>
+                        <?php else: ?>
+                            <p class="store-popup-desc">Belum punya toko?</p>
+                            <hr>
+                            <a class="btn btn-primary btn-small btn-full" href="<?= route('toko.create'); ?>">Buat Toko</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <a class="catalog-nav-user" href="<?= route('profile'); ?>"><?php render_icon('circle-user-round'); ?><?= htmlspecialchars($username); ?></a>
             </div>
         <?php else: ?>
             <div class="navbar-menu">
