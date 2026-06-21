@@ -1,10 +1,14 @@
 <?php
 
 require_once __DIR__ . '/../../config/app.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../includes/remember-me.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+clear_remember_token($conn);
 
 $_SESSION = [];
 

@@ -2,6 +2,12 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['rentalin_remember'])) {
+    require_once dirname(__DIR__) . '/config/database.php';
+    require_once dirname(__DIR__) . '/includes/remember-me.php';
+    try_remember_login($conn);
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

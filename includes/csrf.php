@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/flash.php';
+
 function generate_csrf_token()
 {
     if (empty($_SESSION['_csrf_token'])) {
@@ -22,7 +24,7 @@ function verify_csrf_token($token)
 
 function csrf_field()
 {
-    return '<input type="hidden" name="_token" value="' . generate_csrf_token() . '">';
+    echo '<input type="hidden" name="_token" value="' . generate_csrf_token() . '">';
 }
 
 function csrf_url_param()

@@ -5,9 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once dirname(__DIR__) . '/config/app.php';
+require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/includes/remember-me.php';
 
 if (!isset($_SESSION['user_id'])) {
-    redirect_route('login');
+    if (!try_remember_login($conn)) {
+        redirect_route('login');
+    }
 }
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > SESSION_TIMEOUT) {
@@ -20,6 +24,11 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) >
 
     session_destroy();
     session_start();
+
+    if (try_remember_login($conn)) {
+        $_SESSION['last_activity'] = time();
+        return;
+    }
 
     $_SESSION['flash'] = [
         'type' => 'error',

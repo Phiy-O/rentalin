@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/flash.php';
+require_once __DIR__ . '/../../includes/remember-me.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -16,6 +17,7 @@ require_csrf();
 
 $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
+$remember = isset($_POST['remember']);
 
 if ($email === '' || $password === '') {
     set_flash('error', 'Email dan password wajib diisi.');
@@ -35,13 +37,13 @@ if (!$user || !password_verify($password, $user['password'])) {
 }
 
 session_regenerate_id(true);
+set_user_session($user);
 
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['name'] = $user['name'];
-$_SESSION['username'] = $user['username'];
-$_SESSION['email'] = $user['email'];
-$_SESSION['role'] = $user['role'];
-$_SESSION['last_activity'] = time();
+if ($remember) {
+    create_remember_token($conn, (int) $user['id']);
+} else {
+    clear_remember_token($conn);
+}
 
 set_flash('success', 'Login berhasil. Selamat datang, ' . $user['name'] . '.');
 redirect_route('catalog');

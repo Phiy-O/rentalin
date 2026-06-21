@@ -92,7 +92,7 @@
     .catalog-navbar .navbar-inner {
         align-items: stretch;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
     }
 
     .catalog-navbar .container {
@@ -106,7 +106,13 @@
     }
 
     .catalog-nav-actions {
+        gap: 8px;
         justify-content: space-between;
+    }
+
+    .catalog-nav-user {
+        flex: 1;
+        justify-content: center;
     }
 
     .navbar-login {

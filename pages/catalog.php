@@ -374,50 +374,8 @@ $resultEnd = min($totalCount, 40);
                     </div>
                 <?php else: ?>
                     <div class="product-grid">
-                        <?php foreach ($products as $index => $product):
-                            $image = $product['image'] ?? null;
-                            $isPriority = $index < 4;
-                            $storeLocation = trim(($product['store_city'] ?? '') . (!empty($product['store_province']) ? ', ' . $product['store_province'] : ''));
-                            $timesRented = (int) ($product['times_rented'] ?? 0);
-                            $avgRating = $product['avg_rating'] ?? 0;
-                            $fullStars = floor($avgRating);
-                            $hasHalf = ($avgRating - $fullStars) >= 0.3 && ($avgRating - $fullStars) < 0.8;
-                            $emptyStars = 5 - $fullStars - ($hasHalf ? 1 : 0);
-                        ?>
-                            <article class="product-card">
-                                <a href="<?= route('product.detail', ['id' => $product['id']]); ?>" class="product-card-link">
-                                    <div class="product-card-image">
-                                        <div class="product-card-img">
-                                            <?php render_product_image($image, $product['name'] ?? 'Produk', $isPriority); ?>
-                                        </div>
-                                        <span class="product-card-badge badge badge-available">Tersedia</span>
-                                    </div>
-                                    <div class="product-card-body">
-                                        <p class="product-card-category"><?= htmlspecialchars($product['category_name'] ?? ''); ?></p>
-                                        <h3 class="product-card-title"><?= htmlspecialchars($product['name']); ?></h3>
-                                        <p class="product-card-price">Rp<?= number_format((float) $product['price_per_day'], 0, ',', '.'); ?><span class="product-card-price-unit"> /hari</span></p>
-                                        <div class="product-card-meta">
-                                            <?php if ($storeLocation): ?>
-                                                <span class="product-card-location"><?php render_icon('map-pin', 'icon-xs'); ?><?= htmlspecialchars($storeLocation); ?></span>
-                                            <?php endif; ?>
-                                            <?php if ($avgRating > 0): ?>
-                                                <span class="product-card-rating">
-                                                    <?php for ($i = 0; $i < $fullStars; $i++): ?><?php render_icon('star', 'icon-xs icon-star'); ?><?php endfor; ?>
-                                                    <?php if ($hasHalf): ?><span class="star-half"></span><?php endif; ?>
-                                                    <?php for ($i = 0; $i < $emptyStars; $i++): ?><?php render_icon('star', 'icon-xs icon-star-empty'); ?><?php endfor; ?>
-                                                    <?= number_format($avgRating, 1); ?>
-                                                </span>
-                                            <?php endif; ?>
-                                        </div>
-                                        <div class="product-card-footer">
-                                            <span class="product-card-store"><?php render_icon('store', 'icon-xs'); ?><?= htmlspecialchars($product['store_name']); ?></span>
-                                            <?php if ($timesRented > 0): ?>
-                                                <span class="product-card-rented"><?= $timesRented; ?>x disewa</span>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </a>
-                            </article>
+                        <?php foreach ($products as $index => $product): ?>
+                            <?php include __DIR__ . '/../includes/components/product-card.php'; ?>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -455,16 +413,31 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <?php else: ?>
 <main class="catalog-browse container">
-    <section class="catalog-promo">
-        <div class="catalog-promo-content">
-            <h1>CALL TO ACTION<br>CUST Rp30.000,00-</h1>
-            <p>
-                Temukan barang rental terbaik untuk kebutuhan harian, acara, hobi,
-                dan perjalananmu dengan harga yang lebih hemat.
-            </p>
-            <a class="btn btn-primary" href="#products">Lihat Produk</a>
+    <section class="catalog-banner-carousel" aria-label="Promo Rentalin">
+        <div class="catalog-banner-track" id="catalogBannerTrack">
+            <a class="catalog-banner-slide active" href="#products">
+                <img src="<?= BASE_URL; ?>/assets/images/banner1.png" alt="Promo Rentalin 1">
+            </a>
+            <a class="catalog-banner-slide" href="#products">
+                <img src="<?= BASE_URL; ?>/assets/images/banner2.png" alt="Promo Rentalin 2">
+            </a>
+            <a class="catalog-banner-slide" href="#products">
+                <img src="<?= BASE_URL; ?>/assets/images/banner3.png" alt="Promo Rentalin 3">
+            </a>
         </div>
-        <div class="catalog-promo-visual"></div>
+
+        <button class="catalog-banner-nav prev" type="button" id="catalogBannerPrev" aria-label="Banner sebelumnya">
+            <span aria-hidden="true">&#8249;</span>
+        </button>
+        <button class="catalog-banner-nav next" type="button" id="catalogBannerNext" aria-label="Banner berikutnya">
+            <span aria-hidden="true">&#8250;</span>
+        </button>
+
+        <div class="catalog-banner-dots" id="catalogBannerDots" aria-label="Navigasi banner">
+            <button class="active" type="button" aria-label="Tampilkan banner 1"></button>
+            <button type="button" aria-label="Tampilkan banner 2"></button>
+            <button type="button" aria-label="Tampilkan banner 3"></button>
+        </div>
     </section>
 
     <section class="catalog-products" id="products">
@@ -480,30 +453,71 @@ document.addEventListener('DOMContentLoaded', function () {
         <?php if (empty($products)): ?>
             <div class="catalog-empty-state">
                 <h3>Produk belum tersedia</h3>
-                <p>Import `database/dummy_products.sql` untuk menambahkan produk dummy pertama.</p>
+                <p>Belum ada toko yang menambahkan produk pada kategori ini</p>
             </div>
         <?php else: ?>
-            <div class="catalog-grid">
+            <div class="product-grid">
             <?php foreach ($products as $index => $product): ?>
-                <?php $image = $product['image'] ?? null; $isPriority = $index < 2; ?>
-                <article class="catalog-card">
-                    <div class="catalog-card-image">
-                        <?php render_product_image($image, $product['name'] ?? 'Produk', $isPriority); ?>
-                    </div>
-                    <div class="catalog-card-body">
-                        <h3><?= htmlspecialchars($product['name']); ?></h3>
-                        <p><?= htmlspecialchars($product['store_name']); ?></p>
-                        <div class="catalog-card-footer">
-                            <strong>Rp<?= number_format((float) $product['price_per_day'], 0, ',', '.'); ?>/hari</strong>
-                            <a href="<?= route('product.detail', ['id' => $product['id']]); ?>">Detail</a>
-                        </div>
-                    </div>
-                </article>
+                <?php include __DIR__ . '/../includes/components/product-card.php'; ?>
             <?php endforeach; ?>
             </div>
         <?php endif; ?>
     </section>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.catalog-banner-slide'));
+    var dots = Array.prototype.slice.call(document.querySelectorAll('#catalogBannerDots button'));
+    var prev = document.getElementById('catalogBannerPrev');
+    var next = document.getElementById('catalogBannerNext');
+    var index = 0;
+    var timer;
+
+    if (!slides.length) return;
+
+    function showSlide(nextIndex) {
+        index = (nextIndex + slides.length) % slides.length;
+
+        slides.forEach(function (slide, i) {
+            slide.classList.toggle('active', i === index);
+        });
+
+        dots.forEach(function (dot, i) {
+            dot.classList.toggle('active', i === index);
+        });
+    }
+
+    function startAutoPlay() {
+        clearInterval(timer);
+        timer = setInterval(function () {
+            showSlide(index + 1);
+        }, 4500);
+    }
+
+    if (prev) {
+        prev.addEventListener('click', function () {
+            showSlide(index - 1);
+            startAutoPlay();
+        });
+    }
+
+    if (next) {
+        next.addEventListener('click', function () {
+            showSlide(index + 1);
+            startAutoPlay();
+        });
+    }
+
+    dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () {
+            showSlide(i);
+            startAutoPlay();
+        });
+    });
+
+    startAutoPlay();
+});
+</script>
 <?php endif; ?>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

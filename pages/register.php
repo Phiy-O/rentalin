@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../includes/flash.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/remember-me.php';
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id']) || try_remember_login($conn)) {
     redirect_route('catalog');
 }
 
