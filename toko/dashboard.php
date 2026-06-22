@@ -20,6 +20,11 @@ if (!$store) {
 
 $storeId = (int) $store['id'];
 
+$lateStmt = mysqli_prepare($conn, "UPDATE rentals SET status = 'late' WHERE store_id = ? AND status = 'rented' AND end_date < CURDATE()");
+mysqli_stmt_bind_param($lateStmt, 'i', $storeId);
+mysqli_stmt_execute($lateStmt);
+mysqli_stmt_close($lateStmt);
+
 $totalProducts = 0;
 $pendingOrders = 0;
 $activeRentals = 0;
@@ -91,28 +96,28 @@ $activeMenu = 'dashboard';
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon stat-icon-products"></div>
+                    <div class="stat-icon stat-icon-products"><?php render_icon('package'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $totalProducts; ?></span>
                         <span class="stat-label">Total Barang</span>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon stat-icon-orders"></div>
+                    <div class="stat-icon stat-icon-orders"><?php render_icon('clipboard-list'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $pendingOrders; ?></span>
                         <span class="stat-label">Pesanan Masuk</span>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon stat-icon-active"></div>
+                    <div class="stat-icon stat-icon-active"><?php render_icon('circle-play'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $activeRentals; ?></span>
                         <span class="stat-label">Rental Aktif</span>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon stat-icon-returns"></div>
+                    <div class="stat-icon stat-icon-returns"><?php render_icon('rotate-ccw'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $returnRequests; ?></span>
                         <span class="stat-label">Menunggu Pengembalian</span>
@@ -161,9 +166,15 @@ $activeMenu = 'dashboard';
                                 </div>
                                 <div class="col-actions">
                                     <div class="order-actions">
-                                        <a href="<?= route('rental.reject', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-reject" title="Tolak">Tolak</a>
-                                        <a href="<?= route('rental.accept', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept" title="Terima">Terima</a>
-                                        <a href="<?= route('toko.order.detail', ['id' => $order['id']]); ?>" class="btn-action btn-action-detail" title="Detail">Detail</a>
+                                        <?php if ($order['status'] === 'pending'): ?>
+                                            <a href="<?= route('rental.reject', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-reject" title="Tolak"><?php render_icon('x'); ?>Tolak</a>
+                                            <a href="<?= route('rental.accept', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept" title="Terima"><?php render_icon('check'); ?>Terima</a>
+                                        <?php elseif ($order['status'] === 'approved'): ?>
+                                            <a href="<?= route('rental.start', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept" title="Mulai"><?php render_icon('play'); ?>Mulai</a>
+                                        <?php elseif (in_array($order['status'], ['return_requested', 'late'], true)): ?>
+                                            <a href="<?= route('rental.return.complete', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept" title="Selesai"><?php render_icon('check-check'); ?>Selesai</a>
+                                        <?php endif; ?>
+                                        <a href="<?= route('toko.order.detail', ['id' => $order['id']]); ?>" class="btn-action btn-action-detail" title="Detail"><?php render_icon('eye'); ?>Detail</a>
                                     </div>
                                 </div>
                             </div>

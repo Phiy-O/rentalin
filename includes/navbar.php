@@ -10,8 +10,30 @@ $useCatalogNavbar = !$isPublicPage;
 $userStore = null;
 $cartCount = 0;
 $cartPopupItems = [];
+$navbarProfileImageUrl = '';
 if ($isLoggedIn && $useCatalogNavbar) {
     require_once __DIR__ . '/../config/database.php';
+    require_once __DIR__ . '/image-helper.php';
+
+    $userStmt = mysqli_prepare($conn, "SELECT username, profile_image FROM users WHERE id = ? LIMIT 1");
+    mysqli_stmt_bind_param($userStmt, 'i', $_SESSION['user_id']);
+    mysqli_stmt_execute($userStmt);
+    $userResult = mysqli_stmt_get_result($userStmt);
+    $userRow = mysqli_fetch_assoc($userResult);
+    mysqli_stmt_close($userStmt);
+
+    if ($userRow) {
+        $username = $userRow['username'] ?: $username;
+
+        if (!empty($userRow['profile_image'])) {
+            $safeProfileImage = basename($userRow['profile_image']);
+            $profileImagePath = UPLOAD_PROFILES_PATH . $safeProfileImage;
+            if (file_exists($profileImagePath)) {
+                $navbarProfileImageUrl = UPLOAD_PROFILES_URL . rawurlencode($safeProfileImage);
+            }
+        }
+    }
+
     $stmt = mysqli_prepare($conn, "SELECT id, name FROM stores WHERE user_id = ?");
     mysqli_stmt_bind_param($stmt, 'i', $_SESSION['user_id']);
     mysqli_stmt_execute($stmt);
@@ -102,7 +124,19 @@ if ($isLoggedIn && $useCatalogNavbar) {
                         <?php endif; ?>
                     </div>
                 </div>
-                <a class="catalog-nav-user" href="<?= route('profile'); ?>"><?php render_icon('circle-user-round'); ?><?= htmlspecialchars($username); ?></a>
+                <a class="catalog-nav-user" href="<?= route('profile'); ?>" aria-label="Profil <?= htmlspecialchars($username); ?>">
+                    <span class="catalog-nav-avatar">
+                        <?php if ($navbarProfileImageUrl): ?>
+                            <img src="<?= htmlspecialchars($navbarProfileImageUrl); ?>" alt="Foto profil <?= htmlspecialchars($username); ?>">
+                        <?php else: ?>
+                            <?php render_icon('circle-user-round'); ?>
+                        <?php endif; ?>
+                    </span>
+                    <span class="catalog-nav-username"><?= htmlspecialchars($username); ?></span>
+                </a>
+                <a class="catalog-nav-icon" href="<?= route('rental.returns'); ?>" aria-label="Pengembalian Saya" title="Pengembalian Saya">
+                    <?php render_icon('rotate-ccw'); ?>
+                </a>
             </div>
         <?php else: ?>
             <div class="navbar-menu">

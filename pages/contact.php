@@ -1,7 +1,11 @@
 <?php
 require_once __DIR__ . '/../config/app.php';
+require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
+
+$old = $_SESSION['contact_old'] ?? [];
+unset($_SESSION['contact_old']);
 ?>
 
 <section class="contact-hero">
@@ -12,6 +16,8 @@ require_once __DIR__ . '/../includes/navbar.php';
 </section>
 
 <main class="container contact-page">
+    <?php show_flash(); ?>
+
     <section class="contact-grid">
         <div class="contact-info">
             <h1>Get In Touch</h1>
@@ -66,23 +72,23 @@ require_once __DIR__ . '/../includes/navbar.php';
             <div class="contact-form-row">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <input type="email" id="email" name="email" value="<?= htmlspecialchars($old['email'] ?? ''); ?>" placeholder="Email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" id="name" name="name" placeholder="Name" required>
+                    <input type="text" id="name" name="name" value="<?= htmlspecialchars($old['name'] ?? ''); ?>" placeholder="Name" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="text" id="phone" name="phone" placeholder="Phone">
+                <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($old['phone'] ?? ''); ?>" placeholder="Phone">
             </div>
 
             <div class="form-group">
                 <label for="message">Message</label>
-                <textarea id="message" name="message" rows="10" placeholder="Message" required></textarea>
+                <textarea id="message" name="message" rows="10" placeholder="Message" required><?= htmlspecialchars($old['message'] ?? ''); ?></textarea>
             </div>
 
             <button class="contact-submit" type="submit">Send Message</button>

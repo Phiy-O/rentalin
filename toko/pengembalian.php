@@ -20,6 +20,11 @@ if (!$store) {
 
 $storeId = (int) $store['id'];
 
+$lateStmt = mysqli_prepare($conn, "UPDATE rentals SET status = 'late' WHERE store_id = ? AND status = 'rented' AND end_date < CURDATE()");
+mysqli_stmt_bind_param($lateStmt, 'i', $storeId);
+mysqli_stmt_execute($lateStmt);
+mysqli_stmt_close($lateStmt);
+
 function countReturns($conn, $storeId, $statuses) {
     if (is_array($statuses)) {
         $placeholders = implode(',', array_fill(0, count($statuses), '?'));
@@ -131,28 +136,28 @@ $activeMenu = 'returns';
 
             <div class="orders-stats">
                 <div class="stat-card stat-card-pending">
-                    <div class="stat-icon-wrap stat-icon-clock"></div>
+                    <div class="stat-icon-wrap stat-icon-clock"><?php render_icon('rotate-ccw'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $countPendingReturn; ?></span>
                         <span class="stat-label">Menunggu Konfirmasi</span>
                     </div>
                 </div>
                 <div class="stat-card stat-card-late">
-                    <div class="stat-icon-wrap stat-icon-warn"></div>
+                    <div class="stat-icon-wrap stat-icon-warn"><?php render_icon('triangle-alert'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $countLate; ?></span>
                         <span class="stat-label">Terlambat</span>
                     </div>
                 </div>
                 <div class="stat-card stat-card-rented">
-                    <div class="stat-icon-wrap stat-icon-rent"></div>
+                    <div class="stat-icon-wrap stat-icon-rent"><?php render_icon('circle-play'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $countRented; ?></span>
                         <span class="stat-label">Sedang Disewa</span>
                     </div>
                 </div>
                 <div class="stat-card stat-card-completed">
-                    <div class="stat-icon-wrap stat-icon-done"></div>
+                    <div class="stat-icon-wrap stat-icon-done"><?php render_icon('check-check'); ?></div>
                     <div class="stat-info">
                         <span class="stat-value"><?= $countCompleted; ?></span>
                         <span class="stat-label">Selesai</span>
@@ -178,7 +183,7 @@ $activeMenu = 'returns';
 
             <?php if (empty($returns)): ?>
                 <div class="empty-orders">
-                    <div class="empty-orders-icon"></div>
+                    <div class="empty-orders-icon"><?php render_icon('rotate-ccw'); ?></div>
                     <h3>Belum ada pengembalian barang</h3>
                     <p>Data pengembalian akan muncul saat penyewa mengajukan pengembalian barang.</p>
                 </div>
@@ -197,7 +202,7 @@ $activeMenu = 'returns';
                             <div class="order-card-body">
                                 <h4 class="order-card-title"><?= htmlspecialchars($return['product_name']); ?></h4>
                                 <div class="order-card-renter">
-                                    <span class="order-card-renter-icon"></span>
+                                    <span class="order-card-renter-icon"><?php render_icon('circle-user-round'); ?></span>
                                     <?= htmlspecialchars($return['user_name'] ?: $return['username']); ?>
                                 </div>
                                 <div class="order-card-dates">
@@ -212,7 +217,7 @@ $activeMenu = 'returns';
                                 </div>
                                 <?php if ($return['status'] === 'late' && $return['late_days'] > 0): ?>
                                     <div class="return-late-badge">
-                                        Terlambat <?= $return['late_days']; ?> Hari
+                                        <?php render_icon('triangle-alert'); ?>Terlambat <?= $return['late_days']; ?> Hari
                                     </div>
                                 <?php endif; ?>
                                 <?php if (!empty($return['notes'])): ?>
@@ -224,17 +229,17 @@ $activeMenu = 'returns';
                             </div>
                             <div class="order-card-actions">
                                 <?php if ($return['status'] === 'return_requested'): ?>
-                                    <a href="<?= route('rental.accept', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept">Terima</a>
-                                    <a href="<?= route('rental.reject', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-reject">Tolak</a>
-                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail">Detail</a>
+                                    <a href="<?= route('rental.return.complete', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept"><?php render_icon('check'); ?>Terima</a>
+                                    <a href="<?= route('rental.return.reject', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-reject"><?php render_icon('x'); ?>Tolak</a>
+                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail"><?php render_icon('eye'); ?>Detail</a>
                                 <?php elseif ($return['status'] === 'late'): ?>
-                                    <a href="#" class="btn-action btn-action-fine">Atur Denda</a>
-                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail">Detail</a>
+                                    <a href="<?= route('rental.return.complete', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept"><?php render_icon('check-check'); ?>Selesaikan</a>
+                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail"><?php render_icon('eye'); ?>Detail</a>
                                 <?php elseif ($return['status'] === 'rented'): ?>
-                                    <a href="#" class="btn-action btn-action-chat">Chat</a>
-                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail">Detail</a>
+                                    <a href="#" class="btn-action btn-action-chat"><?php render_icon('message-circle-more'); ?>Chat</a>
+                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail"><?php render_icon('eye'); ?>Detail</a>
                                 <?php else: ?>
-                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail">Detail</a>
+                                    <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail"><?php render_icon('eye'); ?>Detail</a>
                                 <?php endif; ?>
                             </div>
                         </div>

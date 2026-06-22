@@ -163,7 +163,7 @@ while ($row = mysqli_fetch_assoc($featuredResult)) {
                 <p>
                     Rentalin adalah platform sewa-menyewa barang terpadu. Kami percaya kegunaan barang lebih penting daripada kepemilikan. Melalui platform ini, penyewa dapat menghemat pengeluaran, sedangkan pemilik barang bisa menghasilkan pendapatan dari aset yang jarang digunakan.
                 </p>
-                <a class="btn btn-white" href="<?= route('register'); ?>">Baca Selengkapnya</a>
+                <a class="btn btn-white" href="<?= route('about'); ?>">Baca Selengkapnya</a>
             </div>
             <div class="about-gallery">
                 <div class="about-photo tall">

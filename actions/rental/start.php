@@ -11,21 +11,27 @@ $rentalId = (int) ($_GET['id'] ?? 0);
 
 if ($rentalId <= 0) {
     set_flash('error', 'ID pesanan tidak valid.');
-    redirect_route('toko.dashboard');
+    redirect_route('toko.orders');
 }
 
 $stmt = mysqli_prepare($conn, "
     UPDATE rentals r
     INNER JOIN stores s ON s.id = r.store_id
-    SET r.status = 'approved'
-    WHERE r.id = ? AND s.user_id = ? AND r.status = 'pending'
+    SET r.status = 'rented'
+    WHERE r.id = ? AND s.user_id = ? AND r.status = 'approved'
 ");
+
+// Decrease product stock by 1
+$stockStmt = mysqli_prepare($conn, "UPDATE products SET stock = stock - 1 WHERE id = (SELECT product_id FROM rentals WHERE id = ?) AND stock > 0");
+mysqli_stmt_bind_param($stockStmt, 'i', $rentalId);
+mysqli_stmt_execute($stockStmt);
+mysqli_stmt_close($stockStmt);
 mysqli_stmt_bind_param($stmt, 'ii', $rentalId, $_SESSION['user_id']);
 
 if (mysqli_stmt_execute($stmt) && mysqli_stmt_affected_rows($stmt) > 0) {
-    set_flash('success', 'Pesanan berhasil diterima.');
+    set_flash('success', 'Rental berhasil dimulai.');
 } else {
-    set_flash('error', 'Pesanan tidak dapat diterima atau bukan milik toko kamu.');
+    set_flash('error', 'Rental tidak dapat dimulai atau bukan milik toko kamu.');
 }
 mysqli_stmt_close($stmt);
 

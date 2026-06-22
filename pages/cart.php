@@ -85,6 +85,11 @@ foreach ($cartItems as $item) {
                     <div class="cart-card-subtotal">
                         <span class="cart-subtotal-label">Subtotal</span>
                         <span class="cart-subtotal-value">Rp<?= number_format($subtotal, 0, ',', '.'); ?></span>
+                        <?php if ($available): ?>
+                            <a href="<?= route('rental.checkout', ['product_id' => $item['product_id']]); ?>" class="btn btn-primary btn-small">Ajukan Rental</a>
+                        <?php else: ?>
+                            <span class="cart-unavailable">Tidak tersedia</span>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -101,7 +106,11 @@ foreach ($cartItems as $item) {
                         <span>Total Harga</span>
                         <strong>Rp<?= number_format($totalPrice, 0, ',', '.'); ?></strong>
                     </div>
-                    <a href="<?= route('rental.checkout'); ?>" class="btn btn-primary btn-full">Ajukan Rental</a>
+                    <?php if (count($cartItems) === 1): ?>
+                        <a href="<?= route('rental.checkout', ['product_id' => $cartItems[0]['product_id']]); ?>" class="btn btn-primary btn-full">Ajukan Rental</a>
+                    <?php else: ?>
+                        <p class="cart-summary-note">Checkout rental diproses per barang. Pilih tombol Ajukan Rental pada item yang ingin disewa.</p>
+                    <?php endif; ?>
                     <a href="<?= route('catalog'); ?>" class="btn btn-outline btn-full" style="margin-top:8px;">Tambah Barang</a>
                 </div>
             </aside>

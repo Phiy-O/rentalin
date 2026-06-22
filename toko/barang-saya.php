@@ -51,7 +51,7 @@ $whereClause = implode(' AND ', $where);
 $productQuery = "
     SELECT p.id, p.name, p.price_per_day, p.stock, p.condition_status, p.status, p.created_at,
            c.name AS category_name,
-           (SELECT image FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) AS product_image
+           (SELECT image FROM product_images WHERE product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) AS product_image
     FROM products p
     LEFT JOIN categories c ON c.id = p.category_id
     WHERE {$whereClause}
