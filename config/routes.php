@@ -47,8 +47,9 @@ $routes = [
     'rental.reject' => '/actions/rental/reject.php',
     'rental.start' => '/actions/rental/start.php',
     'rental.return.complete' => '/actions/rental/complete-return.php',
-        'rental.returns' => '/pages/rental-returns.php',
+    'rental.returns' => '/pages/rental-returns.php',
     'rental.request.return' => '/actions/rental/request-return.php',
+    'rental.cancel' => '/actions/rental/cancel.php',
 ];
 
 if (!function_exists('route')) {

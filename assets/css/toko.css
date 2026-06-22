@@ -286,7 +286,7 @@
 }
 
 .dashboard-content {
-    min-height: 500px;
+    min-height: 80vh;
 }
 
 .dashboard-header {
@@ -1970,7 +1970,7 @@
 
     .product-item-actions .btn-action {
         flex: 1;
-        text-align: center;
+    min-height: 80vh;
     }
 
     .products-filter-form .btn {

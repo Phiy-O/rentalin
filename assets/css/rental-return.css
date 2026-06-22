@@ -1,0 +1,46 @@
+/* rental-return.css */
+.rental-returns-page {
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 5em;
+    height: 60vh;
+}
+
+.rental-returns-page h1 {
+    margin-bottom: 24px;
+}
+
+.rental-returns-table {
+    width: 100%;
+    max-width: 800px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rental-returns-table th,
+.rental-returns-table td {
+    padding: 12px 8px;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.rental-returns-table th {
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+.rental-returns-table tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.rental-returns-table .btn {
+    margin: 0 4px;
+    display: inline-block;
+}

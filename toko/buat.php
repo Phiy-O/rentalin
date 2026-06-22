@@ -3,8 +3,7 @@ require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../includes/auth-check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/flash.php';
-require_once __DIR__ . '/../includes/header.php';
-require_once __DIR__ . '/../includes/navbar.php';
+require_once __DIR__ . '/../includes/csrf.php';
 
 $currentStep = $_GET['step'] ?? '1';
 
@@ -115,6 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'step1
     set_flash('success', 'Lanjutkan mengisi aturan rental.');
     redirect_route('toko.create', ['step' => '2']);
 }
+
+require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/navbar.php';
 
 $formData = $_SESSION['store_form'] ?? [];
 
@@ -288,62 +290,77 @@ document.addEventListener('DOMContentLoaded', function() {
     const chipsContainer = document.getElementById('category-chips');
     const categoriesInput = document.getElementById('categories-input');
 
-    let selectedCategories = [];
+    if (catSelect && addBtn && chipsContainer && categoriesInput) {
+        let selectedCategories = [];
 
-    <?php $formCats = $formData['categories'] ?? []; ?>
-    <?php if (!empty($formCats)): ?>
-    selectedCategories = <?= json_encode(array_map('intval', $formCats)); ?>;
-    renderChips();
-    <?php endif; ?>
+        <?php $formCats = $formData['categories'] ?? []; ?>
+        <?php if (!empty($formCats)): ?>
+        selectedCategories = <?= json_encode(array_map('intval', $formCats)); ?>;
+        renderChips();
+        <?php endif; ?>
 
-    function renderChips() {
-        chipsContainer.innerHTML = '';
-        categoriesInput.value = selectedCategories.join(',');
+        function renderChips() {
+            chipsContainer.innerHTML = '';
+            categoriesInput.value = selectedCategories.join(',');
 
-        selectedCategories.forEach(function(catId) {
-            var option = catSelect.querySelector('option[value="' + catId + '"]');
-            if (!option) return;
-            var chip = document.createElement('span');
-            chip.className = 'category-chip';
-            chip.innerHTML = option.text + ' <button type="button" class="chip-remove" data-id="' + catId + '">&times;</button>';
-            chipsContainer.appendChild(chip);
+            selectedCategories.forEach(function(catId) {
+                var option = catSelect.querySelector('option[value="' + catId + '"]');
+                if (!option) return;
+
+                var chip = document.createElement('span');
+                chip.className = 'category-chip';
+                chip.innerHTML = option.text + ' <button type="button" class="chip-remove" data-id="' + catId + '">&times;</button>';
+                chipsContainer.appendChild(chip);
+            });
+
+            document.querySelectorAll('.chip-remove').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = parseInt(this.getAttribute('data-id'));
+                    selectedCategories = selectedCategories.filter(function(c) {
+                        return c !== id;
+                    });
+                    renderChips();
+                });
+            });
+        }
+
+        addBtn.addEventListener('click', function() {
+            var val = parseInt(catSelect.value);
+            if (!val) return;
+            if (selectedCategories.indexOf(val) !== -1) return;
+
+            selectedCategories.push(val);
+            renderChips();
+            catSelect.value = '';
         });
 
-        document.querySelectorAll('.chip-remove').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var id = parseInt(this.getAttribute('data-id'));
-                selectedCategories = selectedCategories.filter(function(c) { return c !== id; });
-                renderChips();
-            });
+        catSelect.addEventListener('change', function() {
+            var val = parseInt(this.value);
+            if (!val) return;
+
+            if (selectedCategories.indexOf(val) !== -1) {
+                this.value = '';
+                return;
+            }
+
+            selectedCategories.push(val);
+            renderChips();
+            this.value = '';
         });
     }
-
-    addBtn.addEventListener('click', function() {
-        var val = parseInt(catSelect.value);
-        if (!val) return;
-        if (selectedCategories.indexOf(val) !== -1) return;
-        selectedCategories.push(val);
-        renderChips();
-        catSelect.value = '';
-    });
-
-    catSelect.addEventListener('change', function() {
-        var val = parseInt(this.value);
-        if (!val) return;
-        if (selectedCategories.indexOf(val) !== -1) { this.value = ''; return; }
-        selectedCategories.push(val);
-        renderChips();
-        this.value = '';
-    });
 
     var logoInput = document.getElementById('logo-input');
     var logoPreview = document.getElementById('logo-preview');
 
     if (logoPreview && logoInput) {
-        logoPreview.addEventListener('click', function() { logoInput.click(); });
+        logoPreview.addEventListener('click', function() {
+            logoInput.click();
+        });
+
         logoInput.addEventListener('change', function() {
             var file = this.files[0];
             if (!file) return;
+
             var reader = new FileReader();
             reader.onload = function(e) {
                 logoPreview.innerHTML = '<img src="' + e.target.result + '" alt="Logo preview" class="logo-preview-img">';
