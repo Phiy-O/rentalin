@@ -16,6 +16,7 @@ $productId = (int) ($_POST['product_id'] ?? 0);
 $startDate = $_POST['start_date'] ?? '';
 $endDate = $_POST['end_date'] ?? '';
 $notes = trim($_POST['notes'] ?? '');
+$paymentMethod = trim($_POST['payment_method'] ?? 'cod');
 $agreeTerms = isset($_POST['agree_terms']);
 
 if ($productId <= 0 || $startDate === '' || $endDate === '') {
@@ -25,6 +26,16 @@ if ($productId <= 0 || $startDate === '' || $endDate === '') {
 
 if (!$agreeTerms) {
     set_flash('error', 'Kamu harus menyetujui syarat dan ketentuan rental.');
+    redirect_route('rental.checkout', ['product_id' => $productId]);
+}
+
+if ($paymentMethod !== 'cod') {
+    set_flash('error', 'Metode pembayaran belum tersedia.');
+    redirect_route('rental.checkout', ['product_id' => $productId]);
+}
+
+if (mb_strlen($notes) > 1000) {
+    set_flash('error', 'Catatan maksimal 1000 karakter.');
     redirect_route('rental.checkout', ['product_id' => $productId]);
 }
 
@@ -60,6 +71,46 @@ $storeId = (int) $product['store_id'];
 $pricePerDay = (float) $product['price_per_day'];
 $totalPrice = $pricePerDay * $totalDays;
 
+$overlapQuery = "
+    SELECT COUNT(*) AS total
+    FROM rentals
+    WHERE product_id = ?
+      AND status IN ('pending', 'approved', 'rented', 'late', 'return_requested')
+      AND start_date <= ?
+      AND end_date >= ?
+";
+$overlapStmt = mysqli_prepare($conn, $overlapQuery);
+mysqli_stmt_bind_param($overlapStmt, 'iss', $productId, $endDate, $startDate);
+mysqli_stmt_execute($overlapStmt);
+$overlapCount = (int) mysqli_fetch_assoc(mysqli_stmt_get_result($overlapStmt))['total'];
+mysqli_stmt_close($overlapStmt);
+
+if ($overlapCount >= (int) $product['stock']) {
+    set_flash('error', 'Produk tidak tersedia pada tanggal yang dipilih. Silakan pilih jadwal lain.');
+    redirect_route('rental.checkout', ['product_id' => $productId]);
+}
+
+$duplicateQuery = "
+    SELECT id
+    FROM rentals
+    WHERE user_id = ?
+      AND product_id = ?
+      AND start_date = ?
+      AND end_date = ?
+      AND status IN ('pending', 'approved', 'rented', 'late', 'return_requested')
+    LIMIT 1
+";
+$duplicateStmt = mysqli_prepare($conn, $duplicateQuery);
+mysqli_stmt_bind_param($duplicateStmt, 'iiss', $userId, $productId, $startDate, $endDate);
+mysqli_stmt_execute($duplicateStmt);
+$duplicateRental = mysqli_fetch_assoc(mysqli_stmt_get_result($duplicateStmt));
+mysqli_stmt_close($duplicateStmt);
+
+if ($duplicateRental) {
+    set_flash('error', 'Pengajuan rental yang sama sudah pernah kamu kirim.');
+    redirect_route('rental.checkout', ['product_id' => $productId]);
+}
+
 $insertQuery = "
     INSERT INTO rentals (user_id, product_id, store_id, start_date, end_date, total_days, total_price, status, notes)
     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
@@ -71,6 +122,8 @@ if (!mysqli_stmt_execute($insertStmt)) {
     set_flash('error', 'Pengajuan rental gagal. Silakan coba lagi.');
     redirect_route('rental.checkout', ['product_id' => $productId]);
 }
+
+mysqli_stmt_close($insertStmt);
 
 set_flash('success', 'Pengajuan rental berhasil dikirim. Tunggu konfirmasi dari toko.');
 redirect_route('catalog');

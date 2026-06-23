@@ -23,6 +23,7 @@ $query = "
         s.name AS store_name,
         s.address AS store_address,
         s.phone AS store_phone,
+        s.google_maps_link,
         c.name AS category_name,
         pi.image
     FROM products p
@@ -46,12 +47,15 @@ if (!$product) {
 $today = date('Y-m-d');
 $tomorrow = date('Y-m-d', strtotime('+1 day'));
 $price = (float) $product['price_per_day'];
+$initialTotalDays = 2;
+$initialTotalPrice = $price * $initialTotalDays;
+$mapsLink = trim((string) ($product['google_maps_link'] ?? ''));
 ?>
 
 <header class="checkout-topbar">
     <div class="container checkout-topbar-inner">
         <a class="checkout-logo" href="<?= route('catalog'); ?>">
-            <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
+            <img src="/assets/images/rentalin-logo.png" alt="rentalin-logo">
         </a>
         <a class="checkout-help" href="<?= route('contact'); ?>">Butuh Bantuan?</a>
     </div>
@@ -74,7 +78,7 @@ $price = (float) $product['price_per_day'];
                 </div>
                 <p><?= htmlspecialchars($product['store_address']); ?></p>
                 <p><?= htmlspecialchars($product['store_phone'] ?? '-'); ?></p>
-                <a href="<?= route('contact'); ?>">Lihat di maps</a>
+                <a href="<?= $mapsLink !== '' ? htmlspecialchars($mapsLink) : route('contact'); ?>"<?= $mapsLink !== '' ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>Lihat di maps</a>
             </section>
 
             <section class="checkout-product-card">
@@ -100,10 +104,10 @@ $price = (float) $product['price_per_day'];
 
                         <div class="checkout-duration-row">
                             <span>Estimasi durasi</span>
-                            <strong>2 hari</strong>
+                            <strong id="checkoutDurationValue"><?= $initialTotalDays; ?> hari</strong>
                         </div>
 
-                        <textarea name="notes" placeholder="Catatan untuk toko, contoh: jam pengambilan atau kebutuhan tambahan"></textarea>
+                        <textarea name="notes" placeholder="Catatan untuk toko, contoh: jam pengambilan atau kebutuhan tambahan" maxlength="1000"></textarea>
                     </div>
                 </div>
             </section>
@@ -120,11 +124,11 @@ $price = (float) $product['price_per_day'];
                 <h3>Cek ringkasan transaksi</h3>
                 <div>
                     <span>Total Sewa Akhir</span>
-                    <strong>Rp<?= number_format($price, 0, ',', '.'); ?></strong>
+                    <strong id="checkoutFinalTotal">Rp<?= number_format($initialTotalPrice, 0, ',', '.'); ?></strong>
                 </div>
                 <div>
                     <span>Subtotal Sewa</span>
-                    <strong>Rp<?= number_format($price, 0, ',', '.'); ?></strong>
+                    <strong id="checkoutSubtotal">Rp<?= number_format($initialTotalPrice, 0, ',', '.'); ?></strong>
                 </div>
                 <div>
                     <span>Deposit</span>
@@ -138,7 +142,7 @@ $price = (float) $product['price_per_day'];
 
             <div class="checkout-total-row">
                 <span>Total Tagihan</span>
-                <strong>Rp<?= number_format($price, 0, ',', '.'); ?></strong>
+                <strong id="checkoutGrandTotal">Rp<?= number_format($initialTotalPrice, 0, ',', '.'); ?></strong>
             </div>
 
             <button class="checkout-submit" type="submit">Ajukan Rental</button>
@@ -154,5 +158,70 @@ $price = (float) $product['price_per_day'];
 <footer class="checkout-footer">
     <div class="container">Rentalin copyright <?= date('Y'); ?></div>
 </footer>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var startDateInput = document.getElementById('start_date');
+    var endDateInput = document.getElementById('end_date');
+    var durationValue = document.getElementById('checkoutDurationValue');
+    var subtotalValue = document.getElementById('checkoutSubtotal');
+    var finalTotalValue = document.getElementById('checkoutFinalTotal');
+    var grandTotalValue = document.getElementById('checkoutGrandTotal');
+    var pricePerDay = <?= json_encode($price); ?>;
+
+    function formatRupiah(amount) {
+        return 'Rp' + new Intl.NumberFormat('id-ID', {
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
+    function updateCheckoutSummary() {
+        if (!startDateInput || !endDateInput) {
+            return;
+        }
+
+        if (startDateInput.value && endDateInput.value && endDateInput.value < startDateInput.value) {
+            endDateInput.value = startDateInput.value;
+        }
+
+        if (endDateInput.value) {
+            startDateInput.max = endDateInput.value;
+        } else {
+            startDateInput.removeAttribute('max');
+        }
+
+        if (startDateInput.value) {
+            endDateInput.min = startDateInput.value;
+        }
+
+        var start = new Date(startDateInput.value + 'T00:00:00');
+        var end = new Date(endDateInput.value + 'T00:00:00');
+        var diffTime = end.getTime() - start.getTime();
+        var totalDays = Number.isNaN(diffTime) ? 1 : Math.floor(diffTime / 86400000) + 1;
+
+        if (totalDays < 1) {
+            totalDays = 1;
+        }
+
+        var totalPrice = pricePerDay * totalDays;
+        var durationLabel = totalDays + ' hari';
+        var totalLabel = formatRupiah(totalPrice);
+
+        if (durationValue) durationValue.textContent = durationLabel;
+        if (subtotalValue) subtotalValue.textContent = totalLabel;
+        if (finalTotalValue) finalTotalValue.textContent = totalLabel;
+        if (grandTotalValue) grandTotalValue.textContent = totalLabel;
+    }
+
+    if (startDateInput) {
+        startDateInput.addEventListener('change', updateCheckoutSummary);
+    }
+
+    if (endDateInput) {
+        endDateInput.addEventListener('change', updateCheckoutSummary);
+    }
+
+    updateCheckoutSummary();
+});
+</script>
 </body>
 </html>

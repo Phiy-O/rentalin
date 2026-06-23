@@ -74,5 +74,6 @@ if ($stmt) {
     mysqli_stmt_close($stmt);
 }
 
+session_regenerate_id(true); // Regenerate session ID after successful password update
 set_flash('success', 'Password berhasil diganti. Login tersimpan di perangkat lain sudah dicabut.');
 redirect_route('profile', ['tab' => 'security']);

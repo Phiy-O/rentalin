@@ -27,19 +27,14 @@ if (!$rental) {
     redirect_route('rental.returns');
 }
 
-// Update status to cancelled and restore stock (assuming quantity = 1)
+// Pending rental belum pernah mengurangi stok, jadi cukup ubah statusnya saja.
 $updateStmt = mysqli_prepare($conn, "UPDATE rentals SET status = 'cancelled' WHERE id = ?");
 mysqli_stmt_bind_param($updateStmt, 'i', $rentalId);
 $ok = mysqli_stmt_execute($updateStmt);
 mysqli_stmt_close($updateStmt);
 
 if ($ok) {
-    // restore stock
-    $stockStmt = mysqli_prepare($conn, "UPDATE products SET stock = stock + 1 WHERE id = (SELECT product_id FROM rentals WHERE id = ?) AND stock >= 0");
-    mysqli_stmt_bind_param($stockStmt, 'i', $rentalId);
-    mysqli_stmt_execute($stockStmt);
-    mysqli_stmt_close($stockStmt);
-    set_flash('success', 'Rental dibatalkan dan stok dikembalikan.');
+    set_flash('success', 'Rental berhasil dibatalkan.');
 } else {
     set_flash('error', 'Gagal membatalkan rental.');
 }

@@ -54,7 +54,7 @@ mysqli_stmt_close($stmt);
                             <td><?= htmlspecialchars($r['product_name']); ?></td>
                             <td><?= htmlspecialchars($r['store_name']); ?></td>
                             <td><?= htmlspecialchars($r['start_date']); ?> → <?= htmlspecialchars($r['end_date']); ?></td>
-                            <td><?= htmlspecialchars(ucfirst($r['status'])); ?></td>
+                            <td><span class="status-badge status-<?= htmlspecialchars($r['status']); ?>"><?= htmlspecialchars(ucfirst($r['status'])); ?></span></td>
                             <td>
                                 <?php if ($r['status'] === 'pending'): ?>
                                     <a href="<?= route('rental.cancel', ['id' => $r['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-warning">Batalkan Rental</a>

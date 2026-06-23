@@ -124,19 +124,33 @@ if ($isLoggedIn && $useCatalogNavbar) {
                         <?php endif; ?>
                     </div>
                 </div>
-                <a class="catalog-nav-user" href="<?= route('profile'); ?>" aria-label="Profil <?= htmlspecialchars($username); ?>">
-                    <span class="catalog-nav-avatar">
-                        <?php if ($navbarProfileImageUrl): ?>
-                            <img src="<?= htmlspecialchars($navbarProfileImageUrl); ?>" alt="Foto profil <?= htmlspecialchars($username); ?>">
-                        <?php else: ?>
+                <div class="profile-icon-wrapper">
+                    <a class="catalog-nav-user" href="<?= route('profile'); ?>" aria-label="Profil <?= htmlspecialchars($username); ?>">
+                        <span class="catalog-nav-avatar">
+                            <?php if ($navbarProfileImageUrl): ?>
+                                <img src="<?= htmlspecialchars($navbarProfileImageUrl); ?>" alt="Foto profil <?= htmlspecialchars($username); ?>">
+                            <?php else: ?>
+                                <?php render_icon('circle-user-round'); ?>
+                            <?php endif; ?>
+                        </span>
+                        <span class="catalog-nav-username"><?= htmlspecialchars($username); ?></span>
+                    </a>
+                    <div class="profile-popup">
+                        <a class="profile-popup-item" href="<?= route('profile'); ?>">
                             <?php render_icon('circle-user-round'); ?>
-                        <?php endif; ?>
-                    </span>
-                    <span class="catalog-nav-username"><?= htmlspecialchars($username); ?></span>
-                </a>
-                <a class="catalog-nav-icon" href="<?= route('rental.returns'); ?>" aria-label="Pengembalian Saya" title="Pengembalian Saya">
-                    <?php render_icon('rotate-ccw'); ?>
-                </a>
+                            <span>Lihat Profil</span>
+                        </a>
+                        <a class="profile-popup-item" href="<?= route('rental.returns'); ?>">
+                            <?php render_icon('rotate-ccw'); ?>
+                            <span>Pengembalian Rental</span>
+                        </a>
+                        <hr>
+                        <a class="profile-popup-item" href="<?= route('logout'); ?>">
+                            <?php render_icon('x'); ?>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         <?php else: ?>
             <div class="navbar-menu">

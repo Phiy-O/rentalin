@@ -145,7 +145,17 @@ if ($tab === 'toko') {
     }
 }
 
-$isSearchMode = $search !== '';
+$isSearchMode = $search !== ''
+    || $tab !== 'produk'
+    || ($selectedCategory !== '' && $selectedCategory !== 'semua')
+    || $priceMin !== ''
+    || $priceMax !== ''
+    || $selectedLocation !== ''
+    || $selectedCondition !== ''
+    || $selectedRating !== ''
+    || $selectedDuration !== ''
+    || $selectedStatus !== ''
+    || $sort !== 'relevance';
 $resultStart = min($totalCount, 1);
 $resultEnd = min($totalCount, 40);
 ?>

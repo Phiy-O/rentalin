@@ -3,7 +3,7 @@
 require_once __DIR__ . '/env.php';
 
 define('APP_NAME', $_ENV['APP_NAME'] ?? 'Rentalin');
-define('BASE_URL', rtrim($_ENV['APP_URL'] ?? 'http://localhost/rentalin', '/'));
+define('BASE_URL', rtrim($_ENV['APP_URL'] ?? 'http://localhost', '/'));
 define('SESSION_TIMEOUT', 30 * 60);
 
 require_once __DIR__ . '/routes.php';

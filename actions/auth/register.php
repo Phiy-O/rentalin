@@ -52,6 +52,7 @@ $insertStmt = mysqli_prepare($conn, $insertQuery);
 mysqli_stmt_bind_param($insertStmt, 'sssss', $name, $username, $email, $hashedPassword, $phone);
 
 if (mysqli_stmt_execute($insertStmt)) {
+    session_regenerate_id(true); // Regenerate session ID after successful registration
     set_flash('success', 'Registrasi berhasil. Silakan login.');
     redirect_route('login');
 }

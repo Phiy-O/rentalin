@@ -70,5 +70,7 @@ mysqli_stmt_close($stmt);
 
 $_SESSION['email'] = $email;
 
+session_regenerate_id(true); // Regenerate session ID after successful email update
+
 set_flash('success', 'Email berhasil diganti. Verifikasi email dapat ditambahkan saat layanan email sudah tersedia.');
 redirect_route('profile', ['tab' => 'security']);

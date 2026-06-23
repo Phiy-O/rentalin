@@ -1,46 +1,260 @@
-/* rental-return.css */
+/* ==========================================================================
+   rental-return.css — Enhanced UI for Pengembalian Rental Saya
+   Design consistent with Rentalin design system (profile.css, base.css, toko.css)
+   ========================================================================== */
+
 .rental-returns-page {
-    padding: 40px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-    margin-top: 5em;
-    height: 60vh;
+    padding: 34px 0 84px;
+    margin-top: 4.5em;
 }
 
 .rental-returns-page h1 {
-    margin-bottom: 24px;
+    margin: 0 0 8px;
+    font-size: clamp(24px, 3.5vw, 32px);
+    letter-spacing: -0.03em;
+    color: #0f172a;
 }
 
+.rental-layout {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 14px 38px rgba(15, 23, 42, 0.07);
+    padding: 28px;
+}
+
+.rental-layout .alert {
+    margin-bottom: 20px;
+}
+
+.rental-layout > p {
+    padding: 48px 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ─── Empty state ─── */
+.rental-layout > p:only-child {
+    padding: 64px 20px;
+}
+
+/* ─── Table ─── */
 .rental-returns-table {
     width: 100%;
-    max-width: 800px;
-    border-collapse: collapse;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 4px;
 }
 
-.rental-returns-table th,
-.rental-returns-table td {
-    padding: 12px 8px;
-    border: 1px solid #e5e7eb;
-    text-align: center;
-}
-
-.rental-returns-table th {
+.rental-returns-table thead th {
+    padding: 14px 16px;
     background: #f8fafc;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    text-align: left;
+    border-bottom: 2px solid #e5e7eb;
 }
 
-.rental-returns-table tr:nth-child(even) {
-    background: #f9fafb;
+.rental-returns-table thead th:first-child {
+    border-radius: 12px 0 0 0;
 }
 
+.rental-returns-table thead th:last-child {
+    border-radius: 0 12px 0 0;
+    text-align: right;
+}
+
+.rental-returns-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.rental-returns-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.rental-returns-table tbody tr:not(:last-child) td {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.rental-returns-table tbody td {
+    padding: 16px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #0f172a;
+}
+
+.rental-returns-table tbody td:last-child {
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* ─── Status badges ─── */
+.rental-returns-table .status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.rental-returns-table .status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.rental-returns-table .status-rented {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.rental-returns-table .status-late {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+/* ─── Action buttons in table ─── */
 .rental-returns-table .btn {
-    margin: 0 4px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    text-decoration: none;
+}
+
+.rental-returns-table .btn:active {
+    transform: scale(0.96);
+}
+
+.rental-returns-table .btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+.rental-returns-table .btn-primary:hover {
+    background: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.rental-returns-table .btn-warning {
+    background: #f59e0b;
+    color: #ffffff;
+    border-color: #f59e0b;
+}
+
+.rental-returns-table .btn-warning:hover {
+    background: #d97706;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* ─── Period text in table ─── */
+.rental-returns-table tbody td:nth-child(3) {
+    white-space: nowrap;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ─── Product name ─── */
+.rental-returns-table tbody td:first-child {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* ─── Store name ─── */
+.rental-returns-table tbody td:nth-child(2) {
+    color: #475569;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .rental-returns-page {
+        padding: 20px 0 60px;
+    }
+
+    .rental-layout {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .rental-returns-table thead {
+        display: none;
+    }
+
+    .rental-returns-table,
+    .rental-returns-table tbody,
+    .rental-returns-table tbody tr,
+    .rental-returns-table tbody td {
+        display: block;
+    }
+
+    .rental-returns-table tbody tr {
+        padding: 16px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .rental-returns-table tbody tr:not(:last-child) td {
+        border-bottom: none;
+    }
+
+    .rental-returns-table tbody td {
+        padding: 6px 0;
+        text-align: left !important;
+        border: none;
+        font-size: 14px;
+    }
+
+    .rental-returns-table tbody td::before {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #94a3b8;
+        margin-bottom: 2px;
+    }
+
+    .rental-returns-table tbody td:first-child::before {
+        content: "Produk";
+    }
+
+    .rental-returns-table tbody td:nth-child(2)::before {
+        content: "Toko";
+    }
+
+    .rental-returns-table tbody td:nth-child(3)::before {
+        content: "Periode";
+    }
+
+    .rental-returns-table tbody td:nth-child(4)::before {
+        content: "Status";
+    }
+
+    .rental-returns-table tbody td:last-child {
+        padding-top: 12px;
+        text-align: left !important;
+    }
+
+    .rental-returns-table tbody td:last-child::before {
+        content: "Aksi";
+    }
+
+    .rental-returns-table .btn {
+        width: 100%;
+    }
 }

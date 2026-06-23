@@ -1,7 +1,7 @@
 <footer class="footer" id="footer">
     <div class="container footer-grid">
         <div class="footer-brand">
-            <h2><img src="<?= BASE_URL; ?>/assets/images/rentalin-logo-white.png" alt="rentalin-logo" class="footer-logo"></h2>
+            <h2><img src="/assets/images/rentalin-logo-white.png" alt="rentalin-logo" class="footer-logo"></h2>
             <p>Platform rental barang untuk penyewa dan pemilik toko rental.</p>
             <div class="footer-socials">
                 <a href="#">

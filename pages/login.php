@@ -14,7 +14,7 @@ require_once __DIR__ . '/../includes/header.php';
 <header class="auth-topbar">
     <div class="container auth-topbar-inner">
         <a class="auth-logo" href="<?= route('home'); ?>">
-            <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
+            <img src="/assets/images/rentalin-logo.png" alt="rentalin-logo">
         </a>
         <a class="auth-help" href="<?= route('contact'); ?>">Butuh Bantuan?</a>
     </div>
@@ -24,7 +24,7 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="container auth-login-grid">
         <section class="auth-brand-panel">
             <div class="auth-brand-mark">
-                <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo-white.png" alt="rentalin-logo">
+                <img src="/assets/images/rentalin-logo-white.png" alt="rentalin-logo">
             </div>
             <p>Sewa barang lebih mudah, hemat, dan terpercaya dalam satu platform.</p>
         </section>
