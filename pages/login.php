@@ -38,7 +38,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php show_flash(); ?>
 
             <form class="auth-login-form" action="<?= route('auth.login'); ?>" method="POST">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
                 <div class="form-group auth-field">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="nama@email.com" required>

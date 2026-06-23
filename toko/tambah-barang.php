@@ -47,7 +47,7 @@ require_once __DIR__ . '/../includes/navbar.php';
             </header>
 
             <form method="POST" action="<?= route('toko.products.store'); ?>" enctype="multipart/form-data" class="product-create-form">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
 
                 <div class="product-create-grid">
                     <div class="product-create-main">

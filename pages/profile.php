@@ -74,7 +74,7 @@ if (!empty($user['profile_image'])) {
 
         <?php if (!$isSecurityTab): ?>
             <form class="profile-content profile-biodata profile-edit-form" method="POST" action="<?= route('profile.update'); ?>" enctype="multipart/form-data">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
                 <aside class="profile-photo-card">
                     <div class="profile-photo-preview">
                         <?php if ($avatarUrl): ?>
@@ -162,7 +162,7 @@ if (!empty($user['profile_image'])) {
                     </div>
 
                     <form class="profile-security-form" method="POST" action="<?= route('profile.security.email'); ?>">
-                        <?= csrf_field(); ?>
+                        <?php csrf_field(); ?>
                         <div class="profile-form-grid">
                             <div class="profile-form-group">
                                 <label for="email">Email Baru</label>
@@ -187,7 +187,7 @@ if (!empty($user['profile_image'])) {
                     </div>
 
                     <form class="profile-security-form" method="POST" action="<?= route('profile.security.phone'); ?>">
-                        <?= csrf_field(); ?>
+                        <?php csrf_field(); ?>
                         <div class="profile-form-grid">
                             <div class="profile-form-group">
                                 <label for="phone">Nomor HP Baru</label>
@@ -212,7 +212,7 @@ if (!empty($user['profile_image'])) {
                     </div>
 
                     <form class="profile-security-form" method="POST" action="<?= route('profile.security.password'); ?>">
-                        <?= csrf_field(); ?>
+                        <?php csrf_field(); ?>
                         <div class="profile-form-grid">
                             <div class="profile-form-group">
                                 <label for="current_password">Password Saat Ini</label>

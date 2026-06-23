@@ -141,7 +141,7 @@ if (isset($formData['categories']) && is_string($formData['categories'])) {
         <div class="step-label">Step 1 dari 2 — Informasi Toko</div>
 
         <form method="POST" action="<?= route('toko.create'); ?>" enctype="multipart/form-data" class="store-form">
-            <?= csrf_field(); ?>
+            <?php csrf_field(); ?>
             <input type="hidden" name="action" value="step1">
 
             <div class="store-form-grid">
@@ -243,7 +243,7 @@ if (isset($formData['categories']) && is_string($formData['categories'])) {
         <div class="step-label">Step 2 dari 2 — Aturan Rental</div>
 
         <form method="POST" action="<?= route('toko.create.store'); ?>" class="store-form">
-            <?= csrf_field(); ?>
+            <?php csrf_field(); ?>
             <div class="store-form-single">
                 <h2>Aturan Rental</h2>
 

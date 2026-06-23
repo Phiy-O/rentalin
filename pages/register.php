@@ -38,7 +38,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php show_flash(); ?>
 
             <form class="auth-login-form" action="<?= route('auth.register'); ?>" method="POST">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
                 <div class="form-group auth-field">
                     <label for="name">Nama Lengkap</label>
                     <input type="text" id="name" name="name" placeholder="Nama lengkap" required>

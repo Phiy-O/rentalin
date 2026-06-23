@@ -62,7 +62,7 @@ $price = (float) $product['price_per_day'];
     <?php show_flash(); ?>
 
     <form class="checkout-layout" action="<?= route('rental.store'); ?>" method="POST">
-        <?= csrf_field(); ?>
+        <?php csrf_field(); ?>
         <input type="hidden" name="product_id" value="<?= (int) $product['id']; ?>">
 
         <div class="checkout-main">

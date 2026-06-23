@@ -68,7 +68,7 @@ unset($_SESSION['contact_old']);
         </div>
 
         <form class="contact-form" action="<?= route('contact.submit'); ?>" method="POST">
-            <?= csrf_field(); ?>
+            <?php csrf_field(); ?>
             <div class="contact-form-row">
                 <div class="form-group">
                     <label for="email">Email</label>

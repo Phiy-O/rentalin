@@ -86,7 +86,7 @@ require_once __DIR__ . '/../includes/navbar.php';
             </header>
 
             <form method="POST" action="<?= route('toko.products.update'); ?>" enctype="multipart/form-data" class="product-create-form">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
                 <input type="hidden" name="id" value="<?= $product['id']; ?>">
 
                 <div class="product-create-grid">

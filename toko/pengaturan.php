@@ -59,7 +59,7 @@ $activeMenu = 'settings';
             </header>
 
             <form method="POST" action="<?= route('toko.settings.update'); ?>" enctype="multipart/form-data" id="settings-form" class="settings-form">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
 
                 <div class="settings-grid">
                     <div class="settings-card">
@@ -213,7 +213,7 @@ $activeMenu = 'settings';
 
             <?php if ($store['status'] === 'active'): ?>
             <form method="POST" action="<?= route('toko.settings.update'); ?>" id="deactivate-form" style="display:none;">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
                 <input type="hidden" name="status" value="inactive">
                 <?php foreach ($_POST as $key => $value): ?>
                     <?php if (is_string($value) && $key !== 'status'): ?>
@@ -223,7 +223,7 @@ $activeMenu = 'settings';
             </form>
             <?php else: ?>
             <form method="POST" action="<?= route('toko.settings.update'); ?>" id="activate-form" style="display:none;">
-                <?= csrf_field(); ?>
+                <?php csrf_field(); ?>
                 <input type="hidden" name="status" value="active">
             </form>
             <?php endif; ?>
