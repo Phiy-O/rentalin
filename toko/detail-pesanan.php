@@ -136,15 +136,15 @@ $activeMenu = in_array($order['status'], ['return_requested', 'late', 'completed
 
                     <div class="profile-form-actions">
                         <?php if ($order['status'] === 'pending'): ?>
-                            <a href="<?= route('rental.reject', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-outline">Tolak</a>
-                            <a href="<?= route('rental.accept', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary">Terima</a>
+                            <a href="<?= route('rental.reject', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-outline" onclick="return confirm('Tolak pesanan ini?')">Tolak</a>
+                            <a href="<?= route('rental.accept', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary" onclick="return confirm('Terima pesanan ini?')">Terima</a>
                         <?php elseif ($order['status'] === 'approved'): ?>
-                            <a href="<?= route('rental.start', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary">Mulai Rental</a>
+                            <a href="<?= route('rental.start', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary" onclick="return confirm('Mulai rental? Stok barang akan dikurangi.')">Mulai Rental</a>
                         <?php elseif (in_array($order['status'], ['return_requested', 'late'], true)): ?>
                             <?php if ($order['status'] === 'return_requested'): ?>
-                                <a href="<?= route('rental.return.reject', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-outline">Tolak Pengembalian</a>
+                                <a href="<?= route('rental.return.reject', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-outline" onclick="return confirm('Tolak pengembalian ini?')">Tolak Pengembalian</a>
                             <?php endif; ?>
-                            <a href="<?= route('rental.return.complete', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary">Selesaikan Pengembalian</a>
+                            <a href="<?= route('rental.return.complete', ['id' => $order['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary" onclick="return confirm('Selesaikan pengembalian ini?')">Selesaikan Pengembalian</a>
                         <?php endif; ?>
                     </div>
                 </section>

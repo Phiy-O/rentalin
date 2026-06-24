@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/auth-check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/image-helper.php';
+require_once __DIR__ . '/../includes/pagination.php';
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 
@@ -53,6 +54,9 @@ $search = trim($_GET['q'] ?? '');
 $filterStatus = $_GET['status'] ?? '';
 $filterDateStart = $_GET['date_start'] ?? '';
 $filterDateEnd = $_GET['date_end'] ?? '';
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$perPage = 12;
+$offset = ($page - 1) * $perPage;
 
 $where = ["r.store_id = ?", "r.status IN ('return_requested','late','rented','completed')"];
 $params = [$storeId];
@@ -87,6 +91,28 @@ if ($filterDateEnd !== '') {
 
 $whereClause = implode(' AND ', $where);
 
+$countQuery = "
+    SELECT COUNT(*)
+    FROM rentals r
+    JOIN products p ON r.product_id = p.id
+    JOIN users u ON r.user_id = u.id
+    WHERE {$whereClause}
+";
+$countStmt = mysqli_prepare($conn, $countQuery);
+if (!empty($params)) {
+    mysqli_stmt_bind_param($countStmt, $types, ...$params);
+}
+mysqli_stmt_execute($countStmt);
+mysqli_stmt_bind_result($countStmt, $totalCount);
+mysqli_stmt_fetch($countStmt);
+mysqli_stmt_close($countStmt);
+
+$totalPages = max(1, (int) ceil($totalCount / $perPage));
+if ($page > $totalPages) {
+    $page = $totalPages;
+    $offset = ($page - 1) * $perPage;
+}
+
 $returnQuery = "
     SELECT r.id, r.start_date, r.end_date, r.total_days, r.total_price, r.status, r.notes, r.created_at,
            p.id AS product_id, p.name AS product_name,
@@ -98,6 +124,7 @@ $returnQuery = "
     JOIN users u ON r.user_id = u.id
     WHERE {$whereClause}
     ORDER BY FIELD(r.status, 'return_requested','late','rented','completed'), r.end_date ASC
+    LIMIT $perPage OFFSET $offset
 ";
 
 $retStmt = mysqli_prepare($conn, $returnQuery);
@@ -118,6 +145,14 @@ $statusLabels = [
     'rented' => 'Sedang Disewa',
     'completed' => 'Selesai',
 ];
+
+$paginationBaseUrl = route('toko.returns', array_filter([
+    'q' => $search ?: null,
+    'status' => $filterStatus ?: null,
+    'date_start' => $filterDateStart ?: null,
+    'date_end' => $filterDateEnd ?: null,
+]));
+$paginationHtml = render_pagination($totalCount, $perPage, $page, $paginationBaseUrl);
 
 $activeMenu = 'returns';
 ?>
@@ -229,11 +264,11 @@ $activeMenu = 'returns';
                             </div>
                             <div class="order-card-actions">
                                 <?php if ($return['status'] === 'return_requested'): ?>
-                                    <a href="<?= route('rental.return.complete', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept"><?php render_icon('check'); ?>Terima</a>
-                                    <a href="<?= route('rental.return.reject', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-reject"><?php render_icon('x'); ?>Tolak</a>
+                                    <a href="<?= route('rental.return.complete', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept" onclick="return confirm('Terima pengembalian ini?')"><?php render_icon('check'); ?>Terima</a>
+                                    <a href="<?= route('rental.return.reject', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-reject" onclick="return confirm('Tolak pengembalian ini?')"><?php render_icon('x'); ?>Tolak</a>
                                     <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail"><?php render_icon('eye'); ?>Detail</a>
                                 <?php elseif ($return['status'] === 'late'): ?>
-                                    <a href="<?= route('rental.return.complete', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept"><?php render_icon('check-check'); ?>Selesaikan</a>
+                                    <a href="<?= route('rental.return.complete', ['id' => $return['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action btn-action-accept" onclick="return confirm('Selesaikan pengembalian ini?')"><?php render_icon('check-check'); ?>Selesaikan</a>
                                     <a href="<?= route('toko.order.detail', ['id' => $return['id']]); ?>" class="btn-action btn-action-detail"><?php render_icon('eye'); ?>Detail</a>
                                 <?php elseif ($return['status'] === 'rented'): ?>
                                     <a href="#" class="btn-action btn-action-chat"><?php render_icon('message-circle-more'); ?>Chat</a>
@@ -245,6 +280,7 @@ $activeMenu = 'returns';
                         </div>
                     <?php endforeach; ?>
                 </div>
+                <?= $paginationHtml; ?>
             <?php endif; ?>
         </section>
     </div>

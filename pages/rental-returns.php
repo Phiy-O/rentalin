@@ -18,7 +18,7 @@ $query = "
     FROM rentals r
     JOIN products p ON r.product_id = p.id
     JOIN stores s ON r.store_id = s.id
-    WHERE r.user_id = ? AND r.status IN ('pending','rented','late')
+    WHERE r.user_id = ? AND r.status IN ('pending','rented','late','return_requested')
     ORDER BY r.end_date ASC
 ";
 $stmt = mysqli_prepare($conn, $query);
@@ -57,9 +57,11 @@ mysqli_stmt_close($stmt);
                             <td><span class="status-badge status-<?= htmlspecialchars($r['status']); ?>"><?= htmlspecialchars(ucfirst($r['status'])); ?></span></td>
                             <td>
                                 <?php if ($r['status'] === 'pending'): ?>
-                                    <a href="<?= route('rental.cancel', ['id' => $r['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-warning">Batalkan Rental</a>
+                                    <a href="<?= route('rental.cancel', ['id' => $r['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-warning" onclick="return confirm('Batalkan rental ini?')">Batalkan Rental</a>
+                                <?php elseif ($r['status'] === 'return_requested'): ?>
+                                    <a href="<?= route('rental.cancel', ['id' => $r['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-warning" onclick="return confirm('Batalkan pengembalian ini?')">Batalkan Pengembalian</a>
                                 <?php else: ?>
-                                    <a href="<?= route('rental.request.return', ['id' => $r['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary">Ajukan Pengembalian</a>
+                                    <a href="<?= route('rental.request.return', ['id' => $r['id'], '_token' => generate_csrf_token()]); ?>" class="btn btn-primary" onclick="return confirm('Ajukan pengembalian barang ini?')">Ajukan Pengembalian</a>
                                 <?php endif; ?>
                             </td>
                         </tr>

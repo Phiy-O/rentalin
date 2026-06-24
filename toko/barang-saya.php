@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/auth-check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/image-helper.php';
+require_once __DIR__ . '/../includes/pagination.php';
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 
@@ -23,6 +24,9 @@ $storeId = (int) $store['id'];
 $search = trim($_GET['q'] ?? '');
 $filterStatus = $_GET['status'] ?? '';
 $filterCategory = $_GET['category'] ?? '';
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$perPage = 12;
+$offset = ($page - 1) * $perPage;
 
 $where = ["p.store_id = ?"];
 $params = [$storeId];
@@ -48,6 +52,20 @@ if ($filterCategory !== '' && is_numeric($filterCategory)) {
 
 $whereClause = implode(' AND ', $where);
 
+$countQuery = "SELECT COUNT(*) FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE {$whereClause}";
+$countStmt = mysqli_prepare($conn, $countQuery);
+mysqli_stmt_bind_param($countStmt, $types, ...$params);
+mysqli_stmt_execute($countStmt);
+mysqli_stmt_bind_result($countStmt, $totalCount);
+mysqli_stmt_fetch($countStmt);
+mysqli_stmt_close($countStmt);
+
+$totalPages = max(1, (int) ceil($totalCount / $perPage));
+if ($page > $totalPages) {
+    $page = $totalPages;
+    $offset = ($page - 1) * $perPage;
+}
+
 $productQuery = "
     SELECT p.id, p.name, p.price_per_day, p.stock, p.condition_status, p.status, p.created_at,
            c.name AS category_name,
@@ -56,6 +74,7 @@ $productQuery = "
     LEFT JOIN categories c ON c.id = p.category_id
     WHERE {$whereClause}
     ORDER BY p.created_at DESC
+    LIMIT $perPage OFFSET $offset
 ";
 
 $prodStmt = mysqli_prepare($conn, $productQuery);
@@ -73,6 +92,13 @@ $catResult = mysqli_query($conn, "SELECT id, name FROM categories ORDER BY name"
 if ($catResult) {
     $categories = mysqli_fetch_all($catResult, MYSQLI_ASSOC);
 }
+
+$paginationBaseUrl = route('toko.products', array_filter([
+    'q' => $search ?: null,
+    'status' => $filterStatus ?: null,
+    'category' => $filterCategory !== '' ? $filterCategory : null,
+]));
+$paginationHtml = render_pagination($totalCount, $perPage, $page, $paginationBaseUrl);
 
 $activeMenu = 'products';
 ?>
@@ -141,7 +167,7 @@ $activeMenu = 'products';
                                 </div>
                                 <div class="product-item-actions">
                                     <a href="<?= route('toko.products.edit', ['id' => $product['id']]); ?>" class="btn-action btn-action-edit">Edit</a>
-                                    <a href="<?= route('toko.products.toggle', ['id' => $product['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action <?= $product['status'] === 'available' ? 'btn-action-disable' : 'btn-action-enable'; ?>">
+                                    <a href="<?= route('toko.products.toggle', ['id' => $product['id'], '_token' => generate_csrf_token()]); ?>" class="btn-action <?= $product['status'] === 'available' ? 'btn-action-disable' : 'btn-action-enable'; ?>" onclick="return confirm('<?= $product['status'] === 'available' ? 'Nonaktifkan' : 'Aktifkan'; ?> barang ini?')">
                                         <?= $product['status'] === 'available' ? 'Nonaktifkan' : 'Aktifkan'; ?>
                                     </a>
                                     <a href="<?= route('toko.products.detail', ['id' => $product['id']]); ?>" class="btn-action btn-action-detail">Detail</a>
@@ -149,6 +175,7 @@ $activeMenu = 'products';
                             </div>
                         <?php endforeach; ?>
                     </div>
+                    <?= $paginationHtml; ?>
                 <?php endif; ?>
             </div>
         </section>

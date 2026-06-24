@@ -3,6 +3,7 @@ require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../includes/auth-check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/image-helper.php';
+require_once __DIR__ . '/../includes/pagination.php';
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 
@@ -17,6 +18,9 @@ $selectedCondition = $_GET['condition'] ?? '';
 $selectedRating = $_GET['rating'] ?? '';
 $selectedDuration = $_GET['duration'] ?? '';
 $selectedStatus = $_GET['status'] ?? '';
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$perPage = 12;
+$offset = ($page - 1) * $perPage;
 
 $categories = [];
 $categoryResult = mysqli_query($conn, "SELECT id, name, slug FROM categories ORDER BY name ASC");
@@ -56,7 +60,7 @@ if ($tab === 'toko') {
     $sw = implode(' AND ', $storeWhere);
     $storeSql = "SELECT s.id, s.name, s.slug, s.description, s.city, s.province, s.logo, s.phone,
                         (SELECT COUNT(*) FROM products p WHERE p.store_id = s.id AND p.status = 'available') AS product_count
-                 FROM stores s WHERE $sw ORDER BY s.name ASC LIMIT 40";
+                 FROM stores s WHERE $sw ORDER BY s.name ASC LIMIT $perPage OFFSET $offset";
     $storeResult = mysqli_query($conn, $storeSql);
     while ($row = mysqli_fetch_assoc($storeResult)) {
         $stores[] = $row;
@@ -138,11 +142,17 @@ if ($tab === 'toko') {
                    WHERE $w
                    $havingClause
                    ORDER BY $orderBy
-                   LIMIT 40";
+                   LIMIT $perPage OFFSET $offset";
     $productResult = mysqli_query($conn, $productSql);
     while ($row = mysqli_fetch_assoc($productResult)) {
         $products[] = $row;
     }
+}
+
+$totalPages = max(1, (int) ceil($totalCount / $perPage));
+if ($page > $totalPages) {
+    $page = $totalPages;
+    $offset = ($page - 1) * $perPage;
 }
 
 $isSearchMode = $search !== ''
@@ -156,8 +166,22 @@ $isSearchMode = $search !== ''
     || $selectedDuration !== ''
     || $selectedStatus !== ''
     || $sort !== 'relevance';
-$resultStart = min($totalCount, 1);
-$resultEnd = min($totalCount, 40);
+$resultStart = $totalCount > 0 ? $offset + 1 : 0;
+$resultEnd = min($totalCount, $offset + $perPage);
+$paginationBaseUrl = route('catalog', array_filter([
+    'tab' => $tab,
+    'category' => $selectedCategory ?: null,
+    'search' => $search ?: null,
+    'sort' => $sort !== 'relevance' ? $sort : null,
+    'price_min' => $priceMin !== '' ? $priceMin : null,
+    'price_max' => $priceMax !== '' ? $priceMax : null,
+    'location' => $selectedLocation ?: null,
+    'condition' => $selectedCondition ?: null,
+    'rating' => $selectedRating ?: null,
+    'duration' => $selectedDuration ?: null,
+    'status' => $selectedStatus ?: null,
+]));
+$paginationHtml = render_pagination($totalCount, $perPage, $page, $paginationBaseUrl);
 ?>
 <?php if ($isSearchMode): ?>
 <main class="catalog-market">
@@ -300,9 +324,9 @@ $resultEnd = min($totalCount, 40);
             <div class="catalog-main-header">
                 <p class="catalog-result-count">
                     <?php if ($tab === 'toko'): ?>
-                        Menampilkan <?= $totalCount; ?> toko rental<?= $search !== '' ? ' untuk "' . htmlspecialchars($search) . '"' : ''; ?>
+                        Menampilkan <?= $resultStart; ?>–<?= $resultEnd; ?> dari <?= $totalCount; ?> toko rental<?= $search !== '' ? ' untuk "' . htmlspecialchars($search) . '"' : ''; ?>
                     <?php else: ?>
-                        Menampilkan <?= $totalCount; ?> barang rental<?= $search !== '' ? ' untuk "' . htmlspecialchars($search) . '"' : ''; ?>
+                        Menampilkan <?= $resultStart; ?>–<?= $resultEnd; ?> dari <?= $totalCount; ?> barang rental<?= $search !== '' ? ' untuk "' . htmlspecialchars($search) . '"' : ''; ?>
                     <?php endif; ?>
                 </p>
                 <div class="catalog-sort">
@@ -373,6 +397,7 @@ $resultEnd = min($totalCount, 40);
                             </article>
                         <?php endforeach; ?>
                     </div>
+                    <?= $paginationHtml; ?>
                 <?php endif; ?>
             <?php else: ?>
                 <?php if (empty($products)): ?>
@@ -388,6 +413,7 @@ $resultEnd = min($totalCount, 40);
                             <?php include __DIR__ . '/../includes/components/product-card.php'; ?>
                         <?php endforeach; ?>
                     </div>
+                    <?= $paginationHtml; ?>
                 <?php endif; ?>
             <?php endif; ?>
         </div>
@@ -471,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <?php include __DIR__ . '/../includes/components/product-card.php'; ?>
             <?php endforeach; ?>
             </div>
+            <?= $paginationHtml; ?>
         <?php endif; ?>
     </section>
 </main>

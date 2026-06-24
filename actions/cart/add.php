@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../includes/auth-check.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../includes/flash.php';
 
 require_csrf();
 
@@ -11,7 +12,7 @@ $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
 $userId = $_SESSION['user_id'];
 
 if ($productId <= 0) {
-    $_SESSION['flash_error'] = 'Produk tidak valid.';
+    set_flash('error', 'Produk tidak valid.');
     redirect_route('catalog');
 }
 
@@ -22,7 +23,7 @@ $product = mysqli_fetch_assoc(mysqli_stmt_get_result($stockStmt));
 mysqli_stmt_close($stockStmt);
 
 if (!$product || $product['status'] !== 'available' || (int) $product['stock'] <= 0) {
-    $_SESSION['flash_error'] = 'Barang tidak tersedia saat ini.';
+    set_flash('error', 'Barang tidak tersedia saat ini.');
     redirect_route('product.detail', ['id' => $productId]);
 }
 
@@ -40,10 +41,10 @@ $newQty = $currentCartQty + $quantity;
 if ($newQty > $maxStock) {
     $newQty = $maxStock;
     if ($currentCartQty >= $maxStock) {
-        $_SESSION['flash_error'] = 'Stok barang tidak mencukupi. Keranjang sudah berisi stok maksimal.';
+        set_flash('error', 'Stok barang tidak mencukupi. Keranjang sudah berisi stok maksimal.');
         redirect_route('product.detail', ['id' => $productId]);
     }
-    $_SESSION['flash_info'] = 'Stok tersedia hanya ' . $maxStock . ' unit. Jumlah disesuaikan.';
+    set_flash('info', 'Stok tersedia hanya ' . $maxStock . ' unit. Jumlah disesuaikan.');
 }
 
 if ($existing) {
@@ -58,5 +59,5 @@ if ($existing) {
     mysqli_stmt_close($insert);
 }
 
-$_SESSION['flash_success'] = 'Barang berhasil ditambahkan ke keranjang.';
+set_flash('success', 'Barang berhasil ditambahkan ke keranjang.');
 redirect_route('product.detail', ['id' => $productId]);

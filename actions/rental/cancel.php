@@ -13,9 +13,9 @@ if ($rentalId <= 0) {
     redirect_route('rental.returns');
 }
 
-// Rental can be cancelled only if still pending and belongs to user
+// Rental can be cancelled only if pending (user cancellation) or return_requested (cancel return)
 $stmt = mysqli_prepare($conn, "
-    SELECT id FROM rentals WHERE id = ? AND user_id = ? AND status = 'pending'
+    SELECT id, status FROM rentals WHERE id = ? AND user_id = ? AND status IN ('pending', 'return_requested')
 ");
 mysqli_stmt_bind_param($stmt, 'ii', $rentalId, $_SESSION['user_id']);
 mysqli_stmt_execute($stmt);
@@ -27,14 +27,15 @@ if (!$rental) {
     redirect_route('rental.returns');
 }
 
-// Pending rental belum pernah mengurangi stok, jadi cukup ubah statusnya saja.
-$updateStmt = mysqli_prepare($conn, "UPDATE rentals SET status = 'cancelled' WHERE id = ?");
-mysqli_stmt_bind_param($updateStmt, 'i', $rentalId);
+$newStatus = ($rental['status'] === 'pending') ? 'cancelled' : 'rented';
+$updateStmt = mysqli_prepare($conn, "UPDATE rentals SET status = ? WHERE id = ?");
+mysqli_stmt_bind_param($updateStmt, 'si', $newStatus, $rentalId);
 $ok = mysqli_stmt_execute($updateStmt);
 mysqli_stmt_close($updateStmt);
 
 if ($ok) {
-    set_flash('success', 'Rental berhasil dibatalkan.');
+    $msg = ($newStatus === 'cancelled') ? 'Rental berhasil dibatalkan.' : 'Pengembalian berhasil dibatalkan, rental kembali aktif.';
+    set_flash('success', $msg);
 } else {
     set_flash('error', 'Gagal membatalkan rental.');
 }

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../includes/auth-check.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../includes/flash.php';
 
 require_csrf();
 
@@ -16,5 +17,5 @@ if ($cartId > 0) {
     mysqli_stmt_close($stmt);
 }
 
-$_SESSION['flash_success'] = 'Barang dihapus dari keranjang.';
+set_flash('success', 'Barang dihapus dari keranjang.');
 redirect_route('cart');

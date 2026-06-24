@@ -279,7 +279,7 @@ if ($product['status'] === 'available' && (int) $product['stock'] > 0) {
                             <?php render_icon('message-circle-more', 'icon-xs'); ?>
                             Chat Toko
                         </a>
-                        <a href="#" class="pd-extra-link">
+                        <a href="<?= route('catalog', ['tab' => 'toko', 'search' => $product['store_name']]); ?>" class="pd-extra-link">
                             <?php render_icon('store', 'icon-xs'); ?>
                             Kunjungi Toko
                         </a>
