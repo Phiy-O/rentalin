@@ -11,6 +11,12 @@
     min-height: 64px;
 }
 
+.navbar-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .navbar-logo a img {
     height: 36px;
 }
@@ -82,6 +88,86 @@
 
 .navbar-login a {
     width: 100px;
+}
+
+.navbar-toggle {
+    display: none;
+    border: 0;
+    background: transparent;
+    padding: 10px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    color: #0f172a;
+}
+
+.navbar-toggle svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    color: #0f172a;
+}
+
+.navbar-toggle-icon {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .landing-navbar {
+        width: min(100%, calc(100% - 24px));
+        margin: 0.75rem auto;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 16px;
+    }
+
+    .landing-navbar .navbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px 16px;
+    }
+
+    .landing-navbar .navbar-toggle {
+        display: inline-flex;
+        align-self: flex-end;
+    }
+
+    .landing-navbar .navbar-menu {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .landing-navbar.navbar-open .navbar-menu {
+        display: flex;
+    }
+
+    .landing-navbar .navbar-login {
+        display: none;
+        width: 100%;
+    }
+
+    .landing-navbar.navbar-open .navbar-login {
+        display: block;
+    }
+
+    .landing-navbar .navbar-menu a {
+        padding: 10px 14px;
+    }
+
+    .landing-navbar .landing-navbar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .landing-navbar .navbar-login a {
+        width: 100%;
+    }
 }
 
 /* ===== CATALOG NAVBAR ===== */

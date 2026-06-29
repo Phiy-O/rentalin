@@ -108,6 +108,12 @@
     .catalog-nav-actions {
         gap: 8px;
         justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .catalog-nav-search {
+        width: 100%;
+        order: 1;
     }
 
     .catalog-nav-user {
@@ -118,6 +124,23 @@
     .navbar-login {
         width: 100%;
         justify-content: space-between;
+    }
+
+    .landing-navbar {
+        width: min(100%, calc(100% - 24px));
+        margin: 0.75rem auto 1rem;
+    }
+
+    .landing-navbar .navbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .landing-navbar .navbar-login {
+        width: 100%;
+        justify-content: flex-end;
     }
 
     .hero-grid,

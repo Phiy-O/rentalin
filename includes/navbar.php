@@ -75,6 +75,9 @@ if ($isLoggedIn && $useCatalogNavbar) {
                 <a href="<?= route('home'); ?>">
                     <img src="<?= BASE_URL; ?>/assets/images/rentalin-logo.png" alt="rentalin-logo">
                 </a>
+                <button class="navbar-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+                    <?php render_icon('menu', 'navbar-toggle-icon', '', 24); ?>
+                </button>
             </div>
         <?php endif; ?>
 
@@ -95,13 +98,13 @@ if ($isLoggedIn && $useCatalogNavbar) {
                             <p class="cart-popup-empty">Keranjang masih kosong</p>
                         <?php else: ?>
                             <?php foreach ($cartPopupItems as $ci): ?>
-                            <div class="cart-popup-item">
-                                <div class="cart-popup-img"><?php render_product_image($ci['image'], $ci['name']); ?></div>
-                                <div class="cart-popup-info">
-                                    <p class="cart-popup-name"><?= htmlspecialchars($ci['name']); ?></p>
-                                    <p class="cart-popup-qty"><?= (int) $ci['quantity']; ?>x Rp<?= number_format((float) $ci['price_per_day'], 0, ',', '.'); ?></p>
+                                <div class="cart-popup-item">
+                                    <div class="cart-popup-img"><?php render_product_image($ci['image'], $ci['name']); ?></div>
+                                    <div class="cart-popup-info">
+                                        <p class="cart-popup-name"><?= htmlspecialchars($ci['name']); ?></p>
+                                        <p class="cart-popup-qty"><?= (int) $ci['quantity']; ?>x Rp<?= number_format((float) $ci['price_per_day'], 0, ',', '.'); ?></p>
+                                    </div>
                                 </div>
-                            </div>
                             <?php endforeach; ?>
                             <hr>
                             <a class="btn btn-primary btn-small btn-full" href="<?= route('cart'); ?>">Lihat Keranjang</a>
@@ -170,3 +173,16 @@ if ($isLoggedIn && $useCatalogNavbar) {
         <?php endif; ?>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var toggles = document.querySelectorAll('.landing-navbar .navbar-toggle');
+        toggles.forEach(function(toggle) {
+            var navbar = toggle.closest('.landing-navbar');
+            toggle.addEventListener('click', function() {
+                var isOpen = navbar.classList.toggle('navbar-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+        });
+    });
+</script>
